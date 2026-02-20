@@ -1,0 +1,40 @@
+ body {
+        font-family: 'Lato', sans-serif;
+    }
+
+.theme-navbar{
+    background-color: #0066cc;
+    color: white;
+  
+}
+.theme-navbar-light{
+    background-color: #add1f5;
+}
+.theme-orange-btn{
+    background-color: #ff6600;
+
+}
+
+.theme-orange-btn:hover{
+    background-color: #ff6600;
+    opacity: 0.8;
+
+}
+
+.theme-green-btn{
+    background-color: #28A745;
+
+}
+.theme-green-btn:hover{
+    background-color: #28A745;
+    opacity: 0.8;
+
+}
+.theme-footer{
+    background-color: black;
+    margin-top: 10px;
+
+}
+.theme-product img:hover{
+    transform: scaleX(-1);
+}
