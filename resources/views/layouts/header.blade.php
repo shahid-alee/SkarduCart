@@ -20,8 +20,8 @@
 <body>
     <nav class="navbar navbar-expand-lg theme-navbar">
         <div class="container">
-            <a class="navbar-brand text-light" href="#">
-                <img src="{{ asset('assets/images/logos/logo2.png') }}" class="card-img-top" alt="Logo">
+            <a class="navbar-brand text-light" href="{{url('/')}}">
+                <img src="{{ asset('assets/images/logos/logo3-Photoroom.png') }}" style="width: 250px;" class="card-img-top" alt="Logo">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

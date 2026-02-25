@@ -98,6 +98,147 @@
     </div>
 </section>
 
+<!-- best of electronics -->
+
+<section class="my-5">
+    <div class="container">
+
+
+        <div class="d-flex bd-highlight">
+            <div class="flex-grow-1 bd-highlight"><h3>Best of Electronics</h3></div>
+            <div ><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+            
+        </div>
+
+        <div class="row theme-product">
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="3"><img src="{{ asset('assets/images/products/32.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">Mini MicroWave Oven</h6>
+                        </a>
+                        <h5 class="card-text text-center">Rs 14,999</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+             <div class="col-lg-3">
+                <div class="card">
+                    <a href="#"><img src="{{ asset('assets/images/products/17.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">Head phone</h6>
+                        </a>
+                        <h5 class="card-text text-center">Rs 1,999</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="#" ><img src="{{ asset('assets/images/products/31.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">Digital stove</h6>
+                        </a>
+                        <h5 class="card-text text-center">Rs 2,999</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="#" ><img src="{{ asset('assets/images/products/23.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                        <h6 class="card-title text-center">Apple Iphone 11pro</h6></a>
+                        <h5 class="card-text text-center">Rs 114,499</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</section>
+
+<!-- popular categories -->
+ <section class="my-5">
+    <div class="container">
+
+
+        <div class="d-flex bd-highlight">
+            <div class="flex-grow-1 bd-highlight"><h3>popular categories</h3></div>
+            <div ><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+            
+        </div>
+
+        <div class="row theme-product">
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="3"><img src="{{ asset('assets/images/products/7.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">Nikkon D750 Camera</h6>
+                        </a>
+                        <h5 class="card-text text-center">Rs 244,999</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="#"><img src="{{ asset('assets/images/products/6.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">ladies shoes</h6>
+                        </a>
+                        <h5 class="card-text text-center">Rs 5,999</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="#" ><img src="{{ asset('assets/images/products/8.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">Apple Airbads</h6>
+                        </a>
+                        <h5 class="card-text text-center">Rs 4,999</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card">
+                    <a href="#" ><img src="{{ asset('assets/images/products/18.jpg') }}" class="card-img-top" alt="product"></a>
+                    <div class="card-body">
+                        <a href="#" class="text-dark text-decoration-none">
+                        <h6 class="card-title text-center">Fancy girl sweater</h6></a>
+                        <h5 class="card-text text-center">Rs 1,499</h5>
+                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</section>
+
+
+
 <!-- recently veiwed -->
 
 <section class="my-5">
