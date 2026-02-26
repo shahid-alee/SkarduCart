@@ -38,3 +38,7 @@
 .theme-product img:hover{
     transform: scaleX(-1);
 }
+
+.checked{
+    color: #ff6600;
+}

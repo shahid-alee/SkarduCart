@@ -1,4 +1,7 @@
 @extends('layouts.main')
+@push('title')
+<title>Home Page</title>
+@endpush
 @section('content')
 
 <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -28,7 +31,7 @@
     </button>
 </div>
 
-<!-- product ssection -->
+<!-- product section -->
 
 <section class="my-5">
     <div class="container">
@@ -129,7 +132,7 @@
                     <a href="#"><img src="{{ asset('assets/images/products/17.jpg') }}" class="card-img-top" alt="product"></a>
                     <div class="card-body">
                         <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Head phone</h6>
+                            <h6 class="card-title text-center">Portable Speaker</h6>
                         </a>
                         <h5 class="card-text text-center">Rs 1,999</h5>
                         <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->

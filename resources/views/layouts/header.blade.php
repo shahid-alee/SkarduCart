@@ -14,7 +14,10 @@
 
     <link href="{{ asset('assets/css/style.css') }}" rel="stylesheet">
 
-    <title>Home page</title>
+    
+
+    @stack('title')
+    <!-- <title>Home page</title> -->
 </head>
 
 <body>
@@ -49,7 +52,7 @@
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Mobile</a>
+                        <a class="nav-link active text-dark" href="{{url('category/electronics')}}">Mobile</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link active text-dark" href="#">Fashion</a>
@@ -64,7 +67,7 @@
                         <a class="nav-link active text-dark" href="#">Grocery</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Appliances</a>
+                        <a class="nav-link active text-dark" href="{{url('category/electronics/tv')}}">Appliances</a>
                     </li>
                     
                 </ul>
