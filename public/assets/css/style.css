@@ -42,3 +42,53 @@
 .checked{
     color: #ff6600;
 }
+
+.dashboard-card {
+    border-radius: 15px;
+    transition: 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.icon-box {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar {
+    width: 250px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #1e293b, #0f172a);
+    position: fixed;
+}
+
+.main-content {
+    margin-left: 250px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.sidebar-nav .nav-link {
+    color: #cbd5e1;
+    padding: 10px 15px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    transition: 0.3s;
+}
+
+.sidebar-nav .nav-link:hover {
+    background-color: #334155;
+    color: #fff;
+}
+
+.sidebar-nav .nav-link.active {
+    background-color: #f97316;
+    color: white;
+    font-weight: 600;
+}

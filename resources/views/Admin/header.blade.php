@@ -38,11 +38,7 @@
                 </form>
             </div>
             <div>
-                <a href="#" class="text-decoration-none text-light">Become a seller</a>
-
-                <a href="#" class="btn theme-green-btn btn-sm text-light">
-                    <i class="fa-solid fa-cart-arrow-down"></i> Cart
-                </a>
+               
                
                 @guest
                 <a href="{{ route('login.form') }}" class="btn theme-orange-btn btn-sm text-light">
@@ -68,30 +64,4 @@
 
     <!-- category Nav Bar -->
 
-    <nav class="navbar navbar-expand-lg theme-navbar-light">
-        <div class="container-fluid">
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="nav">
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="{{url('category/electronics')}}">Mobile</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Fashion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Electronics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Furniture</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Grocery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="{{url('category/electronics/tv')}}">Appliances</a>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    </nav>
+    
