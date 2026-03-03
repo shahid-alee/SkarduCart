@@ -8,7 +8,8 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\ProductdetailController;
 use App\Http\Controllers\RegisterController;
-
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\UserController;
 
 Route::get('/auth/login',[LoginController::class, 'loginForm'])->name('login.form');
 Route::post('/account/login',[LoginController::class, 'loginUser'])->name('login.store');
@@ -25,8 +26,24 @@ Route::get('/category/electronics',[CategoryController::class, 'detail']);
 
 Route::get('/category/electronics/{slug}',[SubcategoryController::class, 'detail']);
 Route::get('/category/electronics/tv/{slug}',[ProductdetailController::class, 'detail']);
-
+    
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [DashbordController::class, 'index'])
         ->name('admin.dashboard');
+
+        
 });
+
+
+Route::get('/admin/users',[UserController::class, 'users'])->name('admin.user.users');
+Route::get('/admin/add/user',[UserController::class, 'create'])->name('admin.user.adduser');
+Route::post('/admin/users', [UserController::class, 'store'])->name('user.store');
+     Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
+     Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+
+Route::get('/admin/products',[ProductController::class, 'products'])->name('admin.product.products');
+Route::get('/admin/product',[ProductController::class, 'createproduct'])->name('product.create');
+Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])->name('product.store');
+     Route::get('/product/{id}/edit', [ProductController::class, 'editproduct'])->name('product.edit');
+     Route::put('/product/{id}', [ProductController::class, 'updateproduct'])->name('product.update');
+
