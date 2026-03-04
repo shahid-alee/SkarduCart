@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('admin-dashboard-product')
+@section('admin-dashboard-category')
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -8,10 +8,10 @@
                 <div class="card">
                     <div class="card-body" style="width: max-content;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="card-title">Users Table</h4>
+                            <h4 class="card-title">Categories Table</h4>
                             <a href="#"
                                 class="btn btn-primary btn-rounded btn-fw">
-                                Add New product
+                                Add New Category
                             </a>
                         </div>
 
@@ -20,11 +20,7 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Product Image</th>
-                                        <th>Product Name</th>
                                         <th>Category</th>
-                                        <th>price</th>
-                                        <th>Quantity</th>
                                         <th>Description</th>
 
                                         <th>Actions</th>
@@ -32,24 +28,22 @@
                                 </thead>
 
                                 <tbody>
-                                    @foreach($products as $product)
+                                    @foreach($categories as $category)
                                     <tr>
-                                        <td>{{ $product->id }}</td>
-                                        <td><img src="{{ asset('storage/' . $product->image) }}" width="60"></td>
-                                        <td>{{ $product->product_name }}</td>
-                                        <td>{{ $product->category }}</td>
-                                        <td>{{ $product->price}}</td>
-                                        <td>{{ $product->quantity}}</td>
-                                        <td>{{ $product->description}}</td>
+                                        <td>{{ $category->id }}</td>
+                                        
+                                        <td>{{ $category->category_name }}</td>
+                                        
+                                        <td>{{ $category->description }}</td>
                                         <td>
-                                            <a href="{{ route('product.edit', $product->id) }}">
+                                            <a href="{{ route('category.edit', $category->id) }}">
                                                 <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
                                             </a>
 
-                                            <form action="{{ route('product.destroy', $product->id) }}"
+                                            <form action=""
                                                 method="POST"
                                                 style="display:inline;"
-                                                onsubmit="return confirm('Are you sure you want to delete this product?')">
+                                                onsubmit="return confirm('Are you sure you want to delete this category?')">
 
                                                 @csrf
                                                 @method('DELETE')
@@ -67,7 +61,7 @@
 
 
                         <div class="mt-4 d-flex justify-content-end">
-                            {{ $products->links('pagination::bootstrap-4') }}
+                            {{ $categories->links('pagination::bootstrap-4') }}
                         </div>
 
                     </div>

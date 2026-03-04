@@ -232,7 +232,8 @@
                     <li class="nav-item nav-category">UI Elements</li>
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
-                            <i class="menu-icon mdi mdi-floor-plan"></i>
+
+                            <i class="menu-icon mdi mdi-account-circle-outline"></i>
                             <span class="menu-title">Users</span>
                             <i class="menu-arrow"></i>
                         </a>
@@ -257,20 +258,20 @@
                             </ul>
                         </div>
                     </li>
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-                            <i class="menu-icon mdi mdi-account-circle-outline"></i>
-                            <span class="menu-title">Professors</span>
+                            <i class="menu-icon mdi mdi-floor-plan"></i>
+                            <span class="menu-title">Category</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="charts">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="#">Professor list</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Add New Professor</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{route('admin.category.categories')}}">Category list</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{route('category.create')}}">Add New Category</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
                             <i class="menu-icon mdi mdi-table"></i>
                             <span class="menu-title">Department</span>
@@ -328,9 +329,9 @@
             @yield('admin-user-add')
             @yield('admin-dashboard-product')
             @yield('admin-product-add')
-            <!-- @yield('admin-department-add')
-            @yield('admin-department-index')
-            @yield('admin-professor-add')
+            @yield('admin-dashboard-category')
+            @yield('admin-category-add')
+            <!--  @yield('admin-professor-add')
             @yield('admin-professor-index')
             @yield('admin-country-add')
             @yield('admin-countries-index')

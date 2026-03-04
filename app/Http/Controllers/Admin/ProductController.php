@@ -57,7 +57,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        return view('admin.product.products', compact('product'));
+        return view('admin.product.addproduct', compact('product'));
     }
 
     public function updateproduct(Request $request, $id)
@@ -73,7 +73,7 @@ class ProductController extends Controller
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-      
+
         $product->product_name = $request->product_name;
         $product->price = $request->price;
         $product->category = $request->category;
@@ -95,5 +95,14 @@ class ProductController extends Controller
 
         return redirect()->route('admin.product.products')
             ->with('success', 'Product updated successfully');
+    }
+
+    public function destroy($id)
+    {
+        Product::findOrFail($id)->delete();
+
+        return redirect()
+            ->route('admin.product.products')
+            ->with('success', 'Product deleted successfully.');
     }
 }

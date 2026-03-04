@@ -39,7 +39,7 @@
                                                 <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
                                             </a>
 
-                                            <form action="#"
+                                            <form action="{{ route('user.destroy', $user->id) }}"
                                                   method="POST"
                                                   style="display:inline;"
                                                   onsubmit="return confirm('Are you sure you want to delete this user?')">

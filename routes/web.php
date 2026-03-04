@@ -40,10 +40,25 @@ Route::get('/admin/add/user',[UserController::class, 'create'])->name('admin.use
 Route::post('/admin/users', [UserController::class, 'store'])->name('user.store');
      Route::get('/user/{id}/edit', [UserController::class, 'edit'])->name('user.edit');
      Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
+     Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
 Route::get('/admin/products',[ProductController::class, 'products'])->name('admin.product.products');
 Route::get('/admin/product',[ProductController::class, 'createproduct'])->name('product.create');
 Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])->name('product.store');
      Route::get('/product/{id}/edit', [ProductController::class, 'editproduct'])->name('product.edit');
      Route::put('/product/{id}', [ProductController::class, 'updateproduct'])->name('product.update');
+     Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+
+
+
+Route::get('/admin/categories',[CategoryController::class, 'categories'])->name('admin.category.categories');
+Route::get('/admin/category',[CategoryController::class, 'createcategory'])->name('category.create');
+Route::post('/admin/store/category', [CategoryController::class, 'storecategory'])->name('category.store');
+     Route::get('/category/{id}/edit', [CategoryController::class, 'editcategory'])->name('category.edit');
+     Route::put('/category/{id}', [CategoryController::class, 'updatecategory'])->name('category.update');
+     Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
+      
+
+
+     
 
