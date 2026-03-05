@@ -37,36 +37,33 @@ class CategoryController extends Controller
         Category::create([
             'category_name' => $request->category_name,
             'description' => $request->description,
-          
+
         ]);
 
         return redirect()->back()->with('success', 'Category added successfully');
     }
 
 
-    public function editproduct($id)
+    public function editcategory($id)
     {
         $category = Category::findOrFail($id);
 
-        return view('admin.category.addcategory', compact('product'));
+        return view('admin.category.addcategory', compact('category'));
     }
 
 
-public function updatecategory(Request $request, $id)
+    public function updatecategory(Request $request, $id)
     {
         $category = Category::findOrFail($id);
 
         $request->validate([
             'category_name' => 'required',
             'description' => 'required',
-            
-        ]);
 
+        ]);
 
         $category->category_name = $request->category_name;
         $category->description = $request->description;
-
-
 
         $category->save();
 

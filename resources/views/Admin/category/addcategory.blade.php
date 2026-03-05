@@ -26,13 +26,16 @@
                         </div>
                         @endif
 
-                        <form action="{{ route('category.store') }}"
-                              method="POST" >
+                        <form action="{{ isset($category) ? route('category.update',$category->id) : route('category.store') }}" method="POST"> 
                             @csrf
+                           
+                            @if(isset($category))
+                            @method('PUT')
+                            @endif
 
                             <div class="form-group">
                                 <label>Category Name</label>
-                                <input type="text" name="category_name" class="form-control" value="{{ old('category_name') }}" required>
+                                <input type="text" name="category_name" class="form-control" value="{{ $category->category_name ?? old('category_name') }}"required>
                             </div>
 
 

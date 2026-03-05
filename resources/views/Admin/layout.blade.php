@@ -271,20 +271,20 @@
                             </ul>
                         </div>
                     </li>
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
                             <i class="menu-icon mdi mdi-table"></i>
-                            <span class="menu-title">Department</span>
+                            <span class="menu-title">Sub Categories</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="tables">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="#">Department list</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Add New Department</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{route('admin.subcategory.subcategories')}}">Sub Category list</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{route('subcategory.create')}}">Add New Sub Category</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
                             <i class="menu-icon mdi mdi-layers-outline"></i>
                             <span class="menu-title">Location</span>
@@ -331,9 +331,10 @@
             @yield('admin-product-add')
             @yield('admin-dashboard-category')
             @yield('admin-category-add')
-            <!--  @yield('admin-professor-add')
-            @yield('admin-professor-index')
-            @yield('admin-country-add')
+            @yield('admin-dashboard-subcategory')
+            @yield('admin-subcategory-add')
+
+            <!--  @yield('admin-country-add')
             @yield('admin-countries-index')
             @yield('admin-state-add')
             @yield('admin-state-index')

@@ -10,4 +10,9 @@ class Category extends Model
     'category_name',
     'description'
 ];
+
+public function subcategories()
+{
+    return $this->hasMany(Subcategories::class);
+}
 }

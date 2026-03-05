@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('admin-dashboard-category')
+@section('admin-dashboard-subcategory')
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -11,7 +11,7 @@
                             <h4 class="card-title">Categories Table</h4>
                             <a href="#"
                                 class="btn btn-primary btn-rounded btn-fw">
-                                Add New Category
+                                Add New Sub Category
                             </a>
                         </div>
 
@@ -20,30 +20,31 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Category</th>
+                                        <th>Sub Category </th>
+                                        <th>Category </th>
                                         <th>Description</th>
-
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @foreach($categories as $category)
+                                    @foreach($subcategories as $subcategory)
                                     <tr>
-                                        <td>{{ $category->id }}</td>
+                                        <td>{{ $subcategory->id }}</td>
                                         
-                                        <td>{{ $category->category_name }}</td>
+                                        <td>{{ $subcategory->sub_category_name }}</td>
+                                        <td>{{ $subcategory->category->category_name ?? 'N/A' }}</td>
                                         
-                                        <td>{{ $category->description }}</td>
+                                        <td>{{ $subcategory->description }}</td>
                                         <td>
-                                            <a href="{{ route('category.edit', $category->id) }}">
+                                            <a href="{{ route('subcategory.edit', $subcategory->id) }}">
                                                 <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
                                             </a>
 
-                                            <form action="{{ route('category.destroy', $category->id) }}"
+                                            <form action="{{ route('subcategory.destroy', $subcategory->id) }}"
                                                 method="POST"
                                                 style="display:inline;"
-                                                onsubmit="return confirm('Are you sure you want to delete this category?')">
+                                                onsubmit="return confirm('Are you sure you want to delete this subcategory?')">
 
                                                 @csrf
                                                 @method('DELETE')
@@ -61,7 +62,7 @@
 
 
                         <div class="mt-4 d-flex justify-content-end">
-                            {{ $categories->links('pagination::bootstrap-4') }}
+                            {{ $subcategories->links('pagination::bootstrap-4') }}
                         </div>
 
                     </div>

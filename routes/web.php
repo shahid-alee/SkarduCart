@@ -59,6 +59,14 @@ Route::post('/admin/store/category', [CategoryController::class, 'storecategory'
      Route::delete('/category/{id}', [CategoryController::class, 'destroy'])->name('category.destroy');
       
 
+Route::get('/admin/subcategories',[SubcategoryController::class, 'subcategories'])->name('admin.subcategory.subcategories');
+Route::get('/admin/subcategory',[SubcategoryController::class, 'createsubcategory'])->name('subcategory.create');
+Route::post('/admin/store/subcategory', [SubcategoryController::class, 'storesubcategory'])->name('subcategory.store');
+     Route::get('/subcategory/{id}/edit', [SubcategoryController::class, 'editsubcategory'])->name('subcategory.edit');
+     Route::put('/subcategory/{id}', [SubcategoryController::class, 'updatesubcategory'])->name('subcategory.update');
+     Route::delete('/subcategory/{id}', [SubcategoryController::class, 'destroy'])->name('subcategory.destroy');
+      
+
 
      
 
