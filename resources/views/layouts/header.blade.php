@@ -43,7 +43,7 @@
                 <a href="#" class="btn theme-green-btn btn-sm text-light">
                     <i class="fa-solid fa-cart-arrow-down"></i> Cart
                 </a>
-               
+
                 @guest
                 <a href="{{ route('login.form') }}" class="btn theme-orange-btn btn-sm text-light">
                     <i class="fa-solid fa-user"></i> Login
@@ -58,9 +58,9 @@
                         <i class="fa-solid fa-right-from-bracket"></i> Logout
                     </button>
                 </form>
-               
+
                 <span class="text-light me-2">{{ Auth::user()->name }}</span>
-           
+
                 @endauth
             </div>
         </div>
@@ -72,25 +72,14 @@
         <div class="container-fluid">
             <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
                 <ul class="nav">
+                    @foreach($categories as $category)
                     <li class="nav-item">
-                        <a class="nav-link active text-dark" href="{{url('category/electronics')}}">Mobile</a>
+                        <a class="nav-link text-dark"
+                            href="{{ url('category/'.$category->id) }}">
+                            {{ $category->category_name }}
+                        </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Fashion</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Electronics</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Furniture</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="#">Grocery</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active text-dark" href="{{url('category/electronics/tv')}}">Appliances</a>
-                    </li>
-
+                    @endforeach
                 </ul>
             </div>
         </div>

@@ -51,7 +51,29 @@
 
                             <div class="form-group">
                                 <label>Category</label>
-                                <input type="text" name="category" class="form-control" value="{{ $product->category ?? old('category') }}" required>
+                                <select name="category_id" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ (isset($product) && $product->category_id == $category->id) ? 'selected' : '' }}>
+                                        {{ $category->category_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label>Sub Category</label>
+                                <select name="subcategory_id" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    @foreach ($subcategories as $subcategory)
+                                    <option value="{{ $subcategory->id }}"
+                                        {{ (isset($product) && $product->subcategory_id == $subcategory->id) ? 'selected' : '' }}>
+                                        {{ $subcategory->sub_category_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -61,7 +83,7 @@
 
                             <div class="form-group">
                                 <label>Description</label>
-                                <textarea name="description" class="form-control " style="height: 150px;" required>{{ old('description') }}</textarea>
+                                <textarea name="description" class="form-control" style="height:150px;" required>{{ $product->description ?? old('description') }}</textarea>
                             </div>
 
                             <button type="submit" class="btn btn-primary">

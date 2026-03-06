@@ -15,4 +15,5 @@ public function subcategories()
 {
     return $this->hasMany(Subcategories::class);
 }
+
 }

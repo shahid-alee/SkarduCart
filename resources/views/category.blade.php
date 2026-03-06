@@ -4,9 +4,26 @@
 @endpush
 @section('content')
 
-<div class="container-fluid bg-light p-5">
+<nav class="navbar navbar-expand-lg bg-light theme-navbar-light">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+            <ul class="nav">
+                @foreach($subcategories as $subcategory)
+                <li class="nav-item">
+                    <a class="nav-link text-dark"
+                        href="{{ url('subcategory/'.$subcategory->id) }}">
+                        {{ $subcategory->sub_category_name }}
+                    </a>
+                </li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- <div class="container-fluid bg-light p-5">
     <h1 class="text-center"><i class="fa-solid fa-layer-group"></i>Category</h1>
-</div>
+</div> -->
 
 <section class="my-5">
     <div class="container">
@@ -77,7 +94,7 @@
                 </div>
             </div>
 
-           
+
 
             <div class="col-lg-3 mb-4">
                 <div class="card">

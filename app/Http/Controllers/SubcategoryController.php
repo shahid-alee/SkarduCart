@@ -17,6 +17,8 @@ class SubcategoryController extends Controller
 
   public function subcategories()
   {
+    $subcategories = Subcategories::paginate(10);
+
     $subcategories = Subcategories::with('category')->paginate(10);
 
     return view('admin.subcategory.subcategories', compact('subcategories'));

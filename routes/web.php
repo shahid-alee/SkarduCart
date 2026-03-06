@@ -20,7 +20,11 @@ Route::post('/account/signup',[RegisterController::class, 'signupUser'])->name('
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::get('/',[HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index']);
+
+Route::get('/product/{id}', [ProductdetailController::class, 'detail'])->name('product.show');
+
+Route::get('/category/{id}', [CategoryController::class,'detail']);
 
 Route::get('/category/electronics',[CategoryController::class, 'detail']);
 
@@ -48,6 +52,7 @@ Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])-
      Route::get('/product/{id}/edit', [ProductController::class, 'editproduct'])->name('product.edit');
      Route::put('/product/{id}', [ProductController::class, 'updateproduct'])->name('product.update');
      Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
+     
 
 
 

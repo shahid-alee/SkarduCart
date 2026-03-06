@@ -38,62 +38,34 @@
 
 
         <div class="d-flex bd-highlight">
-            <div class="flex-grow-1 bd-highlight"><h3>Top Deals</h3></div>
-            <div ><a href="#" class="btn btn-sm theme-green-btn  text-light">View All</a></div>
-            
+            <div class="flex-grow-1 bd-highlight">
+                <h3>Top Deals</h3>
+            </div>
+            <div><a href="#" class="btn btn-sm theme-green-btn  text-light">View All</a></div>
+
         </div>
 
-        <div class="row theme-product">
-            <div class="col-lg-3">
+         <div class="row theme-product mt-5">
+
+            @foreach($products as $product)
+
+            <div class="col-lg-3 mt-4">
                 <div class="card">
-                    <a href="3"><img src="{{ asset('assets/images/products/1.jpg') }}" class="card-img-top" alt="product"></a>
+                    <a href="{{ route('product.show', $product->id) }}">
+                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                    </a>
+
                     <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Zero lifestyle watch</h6>
+                        <a href="{{ route('product.show', $product->id) }}" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">{{ $product->product_name }}</h6>
                         </a>
-                        <h5 class="card-text text-center">Rs 4,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+
+                        <h5 class="card-text text-center">Rs {{ $product->price }}</h5>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#"><img src="{{ asset('assets/images/products/2.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Head phone</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 1,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" class="text-dark text-decoration-none"><img src="{{ asset('assets/images/products/3.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Nike shoes</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 2,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" class="text-dark text-decoration-none"><img src="{{ asset('assets/images/products/8.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#"></a>
-                        <h6 class="card-title text-center">Apple airbads</h6></a>
-                        <h5 class="card-text text-center">Rs 4,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
+            @endforeach
 
         </div>
 
@@ -108,62 +80,34 @@
 
 
         <div class="d-flex bd-highlight">
-            <div class="flex-grow-1 bd-highlight"><h3>Best of Electronics</h3></div>
-            <div ><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
-            
+            <div class="flex-grow-1 bd-highlight">
+                <h3>Best of Electronics</h3>
+            </div>
+            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+
         </div>
 
         <div class="row theme-product">
-            <div class="col-lg-3">
+
+            @foreach($products as $product)
+
+            <div class="col-lg-3 mt-4">
                 <div class="card">
-                    <a href="3"><img src="{{ asset('assets/images/products/32.jpg') }}" class="card-img-top" alt="product"></a>
+                    <a href="{{ route('product.show', $product->id) }}">
+                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                    </a>
+
                     <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Mini MicroWave Oven</h6>
+                        <a href="{{ route('product.show', $product->id) }}" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">{{ $product->product_name }}</h6>
                         </a>
-                        <h5 class="card-text text-center">Rs 14,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+
+                        <h5 class="card-text text-center">Rs {{ $product->price }}</h5>
                     </div>
                 </div>
             </div>
 
-             <div class="col-lg-3">
-                <div class="card">
-                    <a href="#"><img src="{{ asset('assets/images/products/17.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Portable Speaker</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 1,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" ><img src="{{ asset('assets/images/products/31.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Digital stove</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 2,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" ><img src="{{ asset('assets/images/products/23.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                        <h6 class="card-title text-center">Apple Iphone 11pro</h6></a>
-                        <h5 class="card-text text-center">Rs 114,499</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
+            @endforeach
 
         </div>
 
@@ -172,67 +116,39 @@
 </section>
 
 <!-- popular categories -->
- <section class="my-5">
+<section class="my-5">
     <div class="container">
 
 
         <div class="d-flex bd-highlight">
-            <div class="flex-grow-1 bd-highlight"><h3>popular categories</h3></div>
-            <div ><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
-            
+            <div class="flex-grow-1 bd-highlight">
+                <h3>popular categories</h3>
+            </div>
+            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+
         </div>
 
         <div class="row theme-product">
-            <div class="col-lg-3">
+
+            @foreach($products as $product)
+
+            <div class="col-lg-3 mt-4">
                 <div class="card">
-                    <a href="3"><img src="{{ asset('assets/images/products/7.jpg') }}" class="card-img-top" alt="product"></a>
+                    <a href="{{ route('product.show', $product->id) }}">
+                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                    </a>
+
                     <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Nikkon D750 Camera</h6>
+                        <a href="{{ route('product.show', $product->id) }}" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">{{ $product->product_name }}</h6>
                         </a>
-                        <h5 class="card-text text-center">Rs 244,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+
+                        <h5 class="card-text text-center">Rs {{ $product->price }}</h5>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#"><img src="{{ asset('assets/images/products/6.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">ladies shoes</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 5,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" ><img src="{{ asset('assets/images/products/8.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Apple Airbads</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 4,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" ><img src="{{ asset('assets/images/products/18.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                        <h6 class="card-title text-center">Fancy girl sweater</h6></a>
-                        <h5 class="card-text text-center">Rs 1,499</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
+            @endforeach
 
         </div>
 
@@ -249,62 +165,34 @@
 
 
         <div class="d-flex bd-highlight">
-            <div class="flex-grow-1 bd-highlight"><h3>Recently viewed</h3></div>
-            <div ><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
-            
+            <div class="flex-grow-1 bd-highlight">
+                <h3>Recently viewed</h3>
+            </div>
+            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+
         </div>
 
         <div class="row theme-product">
-            <div class="col-lg-3">
+
+            @foreach($products as $product)
+
+            <div class="col-lg-3 mt-4">
                 <div class="card">
-                    <a href="3"><img src="{{ asset('assets/images/products/32.jpg') }}" class="card-img-top" alt="product"></a>
+                    <a href="{{ route('product.show', $product->id) }}">
+                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                    </a>
+
                     <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Mini MicroWave Oven</h6>
+                        <a href="{{ route('product.show', $product->id) }}" class="text-dark text-decoration-none">
+                            <h6 class="card-title text-center">{{ $product->product_name }}</h6>
                         </a>
-                        <h5 class="card-text text-center">Rs 14,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
+
+                        <h5 class="card-text text-center">Rs {{ $product->price }}</h5>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#"><img src="{{ asset('assets/images/products/26.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">living room set</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 111,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" ><img src="{{ asset('assets/images/products/31.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                            <h6 class="card-title text-center">Digital stove</h6>
-                        </a>
-                        <h5 class="card-text text-center">Rs 2,999</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-3">
-                <div class="card">
-                    <a href="#" ><img src="{{ asset('assets/images/products/18.jpg') }}" class="card-img-top" alt="product"></a>
-                    <div class="card-body">
-                        <a href="#" class="text-dark text-decoration-none">
-                        <h6 class="card-title text-center">Fancy girl sweater</h6></a>
-                        <h5 class="card-text text-center">Rs 1,499</h5>
-                        <!-- <a href="#" class="btn btn-primary">Buy Now</a> -->
-                    </div>
-                </div>
-            </div>
+            @endforeach
 
         </div>
 

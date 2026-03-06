@@ -10,10 +10,14 @@ use function PHPUnit\Framework\returnValue;
 class CategoryController extends Controller
 {
 
-    public function detail()
-    {
-        return view('category');
-    }
+ public function detail($id)
+{
+    $category = Category::with('subcategories')->findOrFail($id);
+
+    $subcategories = $category->subcategories;
+
+    return view('category', compact('category','subcategories'));
+}
 
     public function categories()
     {

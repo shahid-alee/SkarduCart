@@ -9,7 +9,7 @@
                     <div class="card-body" style="width: max-content;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="card-title">Users Table</h4>
-                            <a href="#"
+                            <a href="{{route('product.create')}}"
                                 class="btn btn-primary btn-rounded btn-fw">
                                 Add New product
                             </a>
@@ -23,6 +23,7 @@
                                         <th>Product Image</th>
                                         <th>Product Name</th>
                                         <th>Category</th>
+                                        <th>Sub Category</th>
                                         <th>price</th>
                                         <th>Quantity</th>
                                         <th>Description</th>
@@ -37,7 +38,8 @@
                                         <td>{{ $product->id }}</td>
                                         <td><img src="{{ asset('storage/' . $product->image) }}" width="60"></td>
                                         <td>{{ $product->product_name }}</td>
-                                        <td>{{ $product->category }}</td>
+                                        <td>{{ $product->category->category_name ?? 'N/A' }}</td>
+                                        <td>{{ $product->subcategory->sub_category_name ?? 'N/A' }}</td>
                                         <td>{{ $product->price}}</td>
                                         <td>{{ $product->quantity}}</td>
                                         <td>{{ $product->description}}</td>

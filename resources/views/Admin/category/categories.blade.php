@@ -9,7 +9,7 @@
                     <div class="card-body" style="width: max-content;">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h4 class="card-title">Categories Table</h4>
-                            <a href="#"
+                            <a href="{{route('category.create')}}"
                                 class="btn btn-primary btn-rounded btn-fw">
                                 Add New Category
                             </a>
@@ -22,7 +22,6 @@
                                         <th>ID</th>
                                         <th>Category</th>
                                         <th>Description</th>
-
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -31,9 +30,7 @@
                                     @foreach($categories as $category)
                                     <tr>
                                         <td>{{ $category->id }}</td>
-                                        
                                         <td>{{ $category->category_name }}</td>
-                                        
                                         <td>{{ $category->description }}</td>
                                         <td>
                                             <a href="{{ route('category.edit', $category->id) }}">
@@ -60,9 +57,7 @@
                         </div>
 
 
-                        <div class="mt-4 d-flex justify-content-end">
-                            {{ $categories->links('pagination::bootstrap-4') }}
-                        </div>
+                        
 
                     </div>
                 </div>
