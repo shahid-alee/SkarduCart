@@ -7,10 +7,11 @@ use Illuminate\Http\Request;
 
 class ProductdetailController extends Controller
 {
-  public function detail($id)
+public function detail($id)
 {
     $product = Product::findOrFail($id);
+    $products = Product::where('category_id', $id)->get();
 
-    return view('product.detail', compact('product'));
+    return view('productdetail', compact('product','products'));
 }
 }

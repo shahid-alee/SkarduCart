@@ -3,17 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-
+use App\Models\Product;
 use App\Models\Subcategories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SubcategoryController extends Controller
 {
-  public function detail($slug)
-  {
-    return view('subcategory');
-  }
+  public function detail($id)
+{
+    $subcategory = Subcategories::findOrFail($id);
+
+    $subcategories = Subcategories::where('category_id', $subcategory->category_id)->get();
+
+    $products = Product::where('subcategory_id', $id)->get();
+
+    return view('category', compact('products','subcategories'));
+}
 
   public function subcategories()
   {

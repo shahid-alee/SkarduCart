@@ -38,14 +38,14 @@
                 </form>
             </div>
             <div>
-                <a href="#" class="text-decoration-none text-light">Become a seller</a>
+                <a href="#" class="text-decoration-none text-light ">Become a seller</a>
 
-                <a href="#" class="btn theme-green-btn btn-sm text-light">
+                <a href="#" class="btn theme-green-btn btn-sm text-light rounded-pill">
                     <i class="fa-solid fa-cart-arrow-down"></i> Cart
                 </a>
 
                 @guest
-                <a href="{{ route('login.form') }}" class="btn theme-orange-btn btn-sm text-light">
+                <a href="{{ route('login.form') }}" class="btn theme-orange-btn btn-sm text-light rounded-pill">
                     <i class="fa-solid fa-user"></i> Login
                 </a>
                 @endguest
@@ -54,7 +54,7 @@
 
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                     @csrf
-                    <button type="submit" class="btn theme-orange-btn btn-sm text-light">
+                    <button type="submit" class="btn theme-orange-btn btn-sm text-light rounded-pill">
                         <i class="fa-solid fa-right-from-bracket"></i> Logout
                     </button>
                 </form>

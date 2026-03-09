@@ -41,11 +41,11 @@
             <div class="flex-grow-1 bd-highlight">
                 <h3>Top Deals</h3>
             </div>
-            <div><a href="#" class="btn btn-sm theme-green-btn  text-light">View All</a></div>
+            <div><a href="#" class="btn btn-sm theme-green-btn  text-light rounded-pill">View All</a></div>
 
         </div>
 
-         <div class="row theme-product mt-5">
+        <div class="row theme-product mt-5">
 
             @foreach($products as $product)
 
@@ -83,7 +83,7 @@
             <div class="flex-grow-1 bd-highlight">
                 <h3>Best of Electronics</h3>
             </div>
-            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light rounded-pill">View All</a></div>
 
         </div>
 
@@ -124,7 +124,7 @@
             <div class="flex-grow-1 bd-highlight">
                 <h3>popular categories</h3>
             </div>
-            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light rounded-pill">View All</a></div>
 
         </div>
 
@@ -168,7 +168,7 @@
             <div class="flex-grow-1 bd-highlight">
                 <h3>Recently viewed</h3>
             </div>
-            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light">View All</a></div>
+            <div><a href="#" class="btn btn-sm theme-orange-btn  text-light rounded-pill">View All</a></div>
 
         </div>
 

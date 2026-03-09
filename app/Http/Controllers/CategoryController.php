@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\Subcategories;
 use Illuminate\Http\Request;
 
 use function PHPUnit\Framework\returnValue;
@@ -10,14 +12,16 @@ use function PHPUnit\Framework\returnValue;
 class CategoryController extends Controller
 {
 
- public function detail($id)
-{
-    $category = Category::with('subcategories')->findOrFail($id);
+    public function detail($id)
+    {
+        $category = Category::with('subcategories')->findOrFail($id);
 
-    $subcategories = $category->subcategories;
+        $subcategories = Subcategories::where('category_id', $id)->get();
 
-    return view('category', compact('category','subcategories'));
-}
+        $products = Product::where('category_id', $id)->get();
+
+        return view('category', compact('products', 'subcategories'));
+    }
 
     public function categories()
     {

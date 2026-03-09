@@ -26,7 +26,7 @@
                                         <th>Sub Category</th>
                                         <th>price</th>
                                         <th>Quantity</th>
-                                        <th>Description</th>
+                                        
 
                                         <th>Actions</th>
                                     </tr>
@@ -42,7 +42,7 @@
                                         <td>{{ $product->subcategory->sub_category_name ?? 'N/A' }}</td>
                                         <td>{{ $product->price}}</td>
                                         <td>{{ $product->quantity}}</td>
-                                        <td>{{ $product->description}}</td>
+                                       
                                         <td>
                                             <a href="{{ route('product.edit', $product->id) }}">
                                                 <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>

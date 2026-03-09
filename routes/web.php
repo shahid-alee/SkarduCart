@@ -8,6 +8,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\ProductdetailController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
 
@@ -19,18 +20,16 @@ Route::post('/account/signup',[RegisterController::class, 'signupUser'])->name('
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-
 Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/product/{id}', [ProductdetailController::class, 'detail'])->name('product.show');
 
-Route::get('/category/{id}', [CategoryController::class,'detail']);
+Route::get('/category/{id}', [CategoryController::class,'detail'])->name('category.products');
 
-Route::get('/category/electronics',[CategoryController::class, 'detail']);
+Route::get('/subcategory/{id}', [SubcategoryController::class,'detail'])->name('subcategory.products');
 
-Route::get('/category/electronics/{slug}',[SubcategoryController::class, 'detail']);
-Route::get('/category/electronics/tv/{slug}',[ProductdetailController::class, 'detail']);
-    
+Route::get('/cart-list/{slug}', [CartController::class,'detail'])->name('cart.list');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [DashbordController::class, 'index'])
         ->name('admin.dashboard');
