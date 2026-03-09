@@ -28,7 +28,9 @@ Route::get('/category/{id}', [CategoryController::class,'detail'])->name('catego
 
 Route::get('/subcategory/{id}', [SubcategoryController::class,'detail'])->name('subcategory.products');
 
-Route::get('/cart-list/{slug}', [CartController::class,'detail'])->name('cart.list');
+Route::get('/cart-list', [CartController::class,'list'])->name('cart.list');
+Route::post('/add-to-cart/{id}', [CartController::class,'add'])->name('cart.add');
+Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [DashbordController::class, 'index'])
