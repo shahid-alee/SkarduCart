@@ -44,9 +44,15 @@
                                         <td>{{ $product->quantity}}</td>
                                        
                                         <td>
+                                            <a href="{{ route('product.view', $product->id) }}">
+                                                <button type="button" class="btn btn-secondary btn-rounded btn-fw">VIEW</button>
+                                            </a>
+
+
                                             <a href="{{ route('product.edit', $product->id) }}">
                                                 <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
                                             </a>
+
 
                                             <form action="{{ route('product.destroy', $product->id) }}"
                                                 method="POST"

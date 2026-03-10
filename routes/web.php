@@ -30,6 +30,7 @@ Route::get('/subcategory/{id}', [SubcategoryController::class,'detail'])->name('
 
 Route::get('/cart-list', [CartController::class,'list'])->name('cart.list');
 Route::post('/add-to-cart/{id}', [CartController::class,'add'])->name('cart.add');
+Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.update');
 Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
 
 Route::middleware(['auth'])->group(function () {
@@ -51,6 +52,7 @@ Route::get('/admin/products',[ProductController::class, 'products'])->name('admi
 Route::get('/admin/product',[ProductController::class, 'createproduct'])->name('product.create');
 Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])->name('product.store');
      Route::get('/product/{id}/edit', [ProductController::class, 'editproduct'])->name('product.edit');
+     Route::get('/product/{id}/view', [ProductController::class, 'viewproduct'])->name('product.view');
      Route::put('/product/{id}', [ProductController::class, 'updateproduct'])->name('product.update');
      Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
      

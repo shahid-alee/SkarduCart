@@ -329,6 +329,7 @@
             @yield('admin-user-add')
             @yield('admin-dashboard-product')
             @yield('admin-product-add')
+            @yield('admin-product-view')
             @yield('admin-dashboard-category')
             @yield('admin-category-add')
             @yield('admin-dashboard-subcategory')

@@ -40,7 +40,7 @@
             <div>
                 <a href="#" class="text-decoration-none text-light ">Become a seller</a>
 
-                <a href="#" class="btn theme-green-btn btn-sm text-light rounded-pill">
+                <a href="{{ route('cart.list') }}" class="btn theme-green-btn btn-sm text-light rounded-pill">
                     <i class="fa-solid fa-cart-arrow-down"></i> Cart
                 </a>
 

@@ -19,10 +19,10 @@ class CartController extends Controller
         if (isset($cart[$id])) {
 
             $cart[$id]['quantity'] += $quantity;
-        } else {
-
+        } 
+        
+        else {
             $cart[$id] = [
-
                 "product_name" => $product->product_name,
                 "price" => $product->price,
                 "image" => $product->image,
@@ -44,6 +44,18 @@ class CartController extends Controller
 
         return view('cartlist', compact('cart'));
     }
+
+    public function update(Request $request, $id)
+{
+    $cart = session()->get('cart');
+
+    if(isset($cart[$id])) {
+        $cart[$id]['quantity'] = $request->quantity;
+        session()->put('cart', $cart);
+    }
+
+    return redirect()->route('cart.list');
+}
 
 
 

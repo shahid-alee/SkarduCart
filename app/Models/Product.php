@@ -16,6 +16,10 @@ class Product extends Model
         'description',
     ];
 
+    protected $casts = [
+        'image' => 'array'
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
@@ -25,4 +29,9 @@ class Product extends Model
     {
         return $this->belongsTo(Subcategories::class, 'subcategory_id');
     }
+
+    public function properties()
+{
+    return $this->hasMany(ProductProperty::class);
+}
 }

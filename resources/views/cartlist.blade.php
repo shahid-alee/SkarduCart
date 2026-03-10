@@ -43,7 +43,26 @@
                                 </div>
                             </td>
                             <td>Rs {{ $details['price'] }}</td>
-                            <td>{{ $details['quantity'] }}</td>
+                            <td>
+
+                                <form action="{{ route('cart.update',$id) }}" method="POST" class="d-flex align-items-center">
+                                    @csrf
+
+                                    <button type="button" class="btn btn-secondary rounded-start-pill btn-sm" onclick="decreaseCartQty({{ $id }})">-</button>
+
+                                    <input type="number" name="quantity" id="qty{{ $id }}" value="{{ $details['quantity'] }}" min="1"
+                                        class="form-control mx-2 text-center"
+                                        style="width:70px">
+
+                                    <button type="button" class="btn btn-secondary rounded-end-pill btn-sm" onclick="increaseCartQty({{ $id }})">+</button>
+
+                                    <button type="submit" class="btn btn-success rounded-pill btn-sm ms-2">
+                                        Update
+                                    </button>
+
+                                </form>
+
+                            </td>
                             <td>Rs {{ $subtotal }}</td>
                             <td>
                                 <a href="{{ route('cart.remove',$id) }}" class="btn btn-danger rounded-pill">
@@ -56,10 +75,18 @@
                 </table>
             </div>
             <div class="col-lg-5 ms-auto my-5">
+                @php
+                $discount = 0;
+                $delivery = 0;
+                $grandTotal = $total - $discount + $delivery;
+                @endphp
+
                 <div>
                     <h3>Price Details</h3>
                 </div>
+
                 <hr>
+
                 <div class="d-flex">
                     <div>
                         <h5>Sub Total</h5>
@@ -74,33 +101,56 @@
                         <h5>Discount</h5>
                     </div>
                     <div class="ms-auto">
-                        <h5>Rs 0</h5>
+                        <h5>Rs {{ $discount}}</h5>
                     </div>
                 </div>
 
                 <div class="d-flex">
                     <div>
-                        <h5>Delivery charge</h5>
+                        <h5>Delivery Charge</h5>
                     </div>
                     <div class="ms-auto">
-                        <h5>Rs 0</h5>
+                        <h5>Rs {{ $delivery }}</h5>
                     </div>
                 </div>
+
                 <hr>
+
                 <div class="d-flex">
                     <div>
                         <h5>Total</h5>
                     </div>
                     <div class="ms-auto">
-                        <h5>Rs {{ $total }}</h5>
+                        <h5>Rs {{ $grandTotal }}</h5>
                     </div>
                 </div>
 
-                <div class="mt-4"><a href="#" class="btn theme-orange-btn text-light rounded-pill w-100">
+                <div class="mt-4">
+                    <a href="#" class="btn theme-orange-btn text-light rounded-pill w-100">
                         Buy Now
-                    </a></div>
+                    </a>
+                </div>
+
             </div>
         </div>
-    </div>
 </section>
+
+<script>
+    function increaseCartQty(id) {
+
+        let qty = document.getElementById('qty' + id);
+        qty.value = parseInt(qty.value) + 1;
+
+    }
+
+    function decreaseCartQty(id) {
+
+        let qty = document.getElementById('qty' + id);
+
+        if (qty.value > 1) {
+            qty.value = parseInt(qty.value) - 1;
+        }
+
+    }
+</script>
 @endsection

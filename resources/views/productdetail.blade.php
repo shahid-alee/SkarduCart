@@ -15,7 +15,7 @@
 <section class="my-5">
     <div class="container">
         <div class="row">
-            <!-- Product Image -->
+
             <div class="col-lg-4">
                 <div class="card">
                     <img src="{{ asset('storage/'.$product->image) }}"
@@ -24,22 +24,41 @@
                 </div>
             </div>
 
-
-            <!-- Product Info -->
             <div class="col-lg-8">
                 <h3>{{ $product->product_name }}</h3>
                 <h4 class="text-success">Rs {{ $product->price }}</h4>
-                <div>
 
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star checked"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
+                <div class="d-flex">
+                    <div class="p-1">
 
-                    <h6>5 Customer Ratings</h6>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star checked"></span>
+                        <span class="fa fa-star"></span>
+                        <span class="fa fa-star"></span>
+                    </div>
+                    <div class="me-3">
+                        <h6 class="p-1">5 Customer Ratings</h6>
+                    </div>
+                </div>
+
+                @foreach($product->properties as $property)
+
+                <div class="mb-2">
+
+                    <strong>{{ ucfirst($property->property_name) }} :</strong>
+
+                    @foreach($property->values as $value)
+
+                    <span class="badge bg-secondary">
+                        {{ $value->value }}
+                    </span>
+
+                    @endforeach
 
                 </div>
+
+                @endforeach
 
                 <div class="mt-3">
                     <p>
@@ -80,36 +99,7 @@
     </div>
 
 
-    <!-- Related Products -->
-    <section>
-        <div class="container">
-            <div class="d-flex bd-highlight mb-3">
-                <div class="flex-grow-1 bd-highlight">
-                    <h3>Related Products</h3>
-                </div>
-            </div>
-            <div class="row theme-product">
-                @foreach($products as $product)
-                <div class="col-lg-3 mt-4">
-                    <div class="card">
-                        <a href="{{ route('product.show', $product->id) }}">
-                            <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
-                        </a>
 
-                        <div class="card-body">
-                            <a href="{{ route('product.show', $product->id) }}" class="text-dark text-decoration-none">
-                                <h6 class="card-title text-center">{{ $product->product_name }}</h6>
-                            </a>
-
-                            <h5 class="card-text text-center">Rs {{ $product->price }}</h5>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        </div>
-    </section>
     <hr>
 
 
@@ -131,6 +121,8 @@
     </section>
     </div>
 </section>
+
+
 <script>
     function increaseQty() {
         let qty = document.getElementById('quantity');
