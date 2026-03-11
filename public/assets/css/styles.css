@@ -92,3 +92,13 @@
     color: white;
     font-weight: 600;
 }
+
+.thumb-img{
+transition:0.3s;
+border:2px solid transparent;
+}
+
+.thumb-img:hover{
+border:2px solid #ff6600;
+transform:scale(1.05);
+}

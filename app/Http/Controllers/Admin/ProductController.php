@@ -120,7 +120,7 @@ class ProductController extends Controller
             'subcategory_id' => 'required',
             'quantity' => 'required|integer',
             'description' => 'required',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:10048',
+            'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
         ]);
 
         $product->update([
@@ -133,47 +133,72 @@ class ProductController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+
+            $oldImages = $product->image;
+
+            if (!is_array($oldImages)) {
+                $oldImages = json_decode($oldImages, true) ?? [$oldImages];
             }
-            $product->image = $request->file('image')->store('products', 'public');
+
+            foreach ($oldImages as $img) {
+
+                if (!empty($img) && Storage::disk('public')->exists($img)) {
+                    Storage::disk('public')->delete($img);
+                }
+            }
+
+            $imagePaths = [];
+
+            foreach ($request->file('image') as $img) {
+                $path = $img->store('products', 'public');
+                $imagePaths[] = $path;
+            }
+
+            $product->image = $imagePaths;
             $product->save();
         }
 
         if ($request->properties) {
+
             $product->properties()->delete();
 
             foreach ($request->properties as $propertyName => $values) {
+
                 $property = ProductProperty::create([
                     'product_id' => $product->id,
                     'user_id' => auth()->id(),
-                    'property_name' => $propertyName,
+                    'property_name' => $propertyName
                 ]);
 
                 foreach ($values as $value) {
+
                     ProductPropertyValue::create([
                         'product_property_id' => $property->id,
-                        'value' => $value,
+                        'value' => $value
                     ]);
                 }
             }
         }
 
-        return redirect()->route('admin.product.products')->with('success', 'Product updated successfully');
+        return redirect()->route('admin.product.products')
+            ->with('success', 'Product updated successfully');
     }
 
 
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
-
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
-        }
 
+            foreach ($product->image as $img) {
+                Storage::disk('public')->delete($img);
+            }
+        }
         $product->properties()->delete();
         $product->delete();
 
-        return redirect()->route('admin.product.products')->with('success', 'Product deleted successfully.');
+        return redirect()
+            ->route('admin.product.products')
+            ->with('success', 'Product deleted successfully');
     }
 }

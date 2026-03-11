@@ -32,7 +32,7 @@
             <div class="col-lg-3 mt-4">
                 <div class="card">
                     <a href="{{ route('product.show', $product->id) }}">
-                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                        <img src="{{ asset('storage/' . $product->image[0]) }}" class="card-img-top" alt="product">
                     </a>
                     <div class="card-body">
                         <a href="{{ route('product.show', $product->id) }}" class="text-dark text-decoration-none">

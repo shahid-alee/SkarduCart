@@ -35,7 +35,7 @@
                             <td>
                                 <div class="d-flex">
                                     <div>
-                                        <img src="{{ asset('storage/'.$details['image']) }}" style="width:100px">
+                                        <img src="{{ asset('storage/' . $details['image'][0]) }}" style="width:100px">
                                     </div>
                                     <div>
                                         <h5 class="p-3">{{ $details['product_name'] }}</h5>
@@ -126,8 +126,8 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="#" class="btn theme-orange-btn text-light rounded-pill w-100">
-                        Buy Now
+                    <a href="{{route('checkout')}}" class="btn theme-orange-btn text-light rounded-pill w-100">
+                        Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
 

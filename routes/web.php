@@ -9,6 +9,7 @@ use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\ProductdetailController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
 
@@ -32,6 +33,9 @@ Route::get('/cart-list', [CartController::class,'list'])->name('cart.list');
 Route::post('/add-to-cart/{id}', [CartController::class,'add'])->name('cart.add');
 Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.update');
 Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
+
+
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [DashbordController::class, 'index'])

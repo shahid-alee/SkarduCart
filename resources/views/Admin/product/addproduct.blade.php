@@ -92,29 +92,29 @@
                             <div class="form-group mb-3">
                                 <label><strong>Color</strong></label><br>
                                 <div class="form-check-inline">
-                                    <label class="me-3"><input type="checkbox" name="properties[color][]" value="Black"> Black</label>
-                                    <label class="me-3"><input type="checkbox" name="properties[color][]" value="White"> White</label>
-                                    <label class="me-3"><input type="checkbox" name="properties[color][]" value="Grey"> Grey</label>
-                                    <label class="me-3"><input type="checkbox" name="properties[color][]" value="Silver"> Silver</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[color][]" value="Black"> Black</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[color][]" value="White"> White</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[color][]" value="Grey"> Grey</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[color][]" value="Silver"> Silver</label>
                                 </div>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label><strong>Storage</strong></label><br>
                                 <div class="form-check-inline">
-                                    <label class="me-4 p-2"><input type="checkbox" name="properties[storage][]" value="128GB"> 128GB</label>
-                                    <label class="me-4 p-2"><input type="checkbox" name="properties[storage][]" value="256GB"> 256GB</label>
-                                    <label class="me-4 p-2"><input type="checkbox" name="properties[storage][]" value="512GB"> 512GB</label>
-                                    <label class="me-4 p-2"><input type="checkbox" name="properties[storage][]" value="1TB"> 1TB</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[storage][]" value="128GB"> 128GB</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[storage][]" value="256GB"> 256GB</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[storage][]" value="512GB"> 512GB</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[storage][]" value="1TB"> 1TB</label>
                                 </div>
                             </div>
 
                             <div class="form-group mb-3">
                                 <label><strong>Generation (Laptop Only)</strong></label><br>
                                 <div class="form-check-inline">
-                                    <label class="me-5"><input type="checkbox" name="properties[generation][]" value="i5 10th Gen"> i5 10th Gen</label>
-                                    <label class="me-5"><input type="checkbox" name="properties[generation][]" value="i5 11th Gen"> i5 11th Gen</label>
-                                    <label class="me-5"><input type="checkbox" name="properties[generation][]" value="i7 12th Gen"> i7 12th Gen</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[generation][]" value="i5 10th Gen"> i5 10th Gen</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[generation][]" value="i5 11th Gen"> i5 11th Gen</label>
+                                    <label class="me-4"><input type="checkbox" name="properties[generation][]" value="i7 12th Gen"> i7 12th Gen</label>
                                 </div>
                             </div>
 

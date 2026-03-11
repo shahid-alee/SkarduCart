@@ -26,7 +26,7 @@
                                         <th>Sub Category</th>
                                         <th>price</th>
                                         <th>Quantity</th>
-                                        
+
 
                                         <th>Actions</th>
                                     </tr>
@@ -36,13 +36,16 @@
                                     @foreach($products as $product)
                                     <tr>
                                         <td>{{ $product->id }}</td>
-                                        <td><img src="{{ asset('storage/' . $product->image) }}" width="60"></td>
+                                        <td>@if(!empty($product->image))
+                                            <img src="{{ asset('storage/' . $product->image[0]) }}" width="60">
+                                            @endif
+                                        </td>
                                         <td>{{ $product->product_name }}</td>
                                         <td>{{ $product->category->category_name ?? 'N/A' }}</td>
                                         <td>{{ $product->subcategory->sub_category_name ?? 'N/A' }}</td>
                                         <td>{{ $product->price}}</td>
                                         <td>{{ $product->quantity}}</td>
-                                       
+
                                         <td>
                                             <a href="{{ route('product.view', $product->id) }}">
                                                 <button type="button" class="btn btn-secondary btn-rounded btn-fw">VIEW</button>

@@ -6,6 +6,19 @@
 
 @section('content')
 
+
+<style>
+.thumb-img{
+transition:0.3s;
+border:2px solid transparent;
+}
+
+.thumb-img:hover{
+border:2px solid #ff6600;
+transform:scale(1.05);
+}
+</style>
+
 <div class="container-fluid bg-light p-5">
     <h1 class="text-center">
         <i class="fa-brands fa-product-hunt"></i> Product Detail
@@ -17,12 +30,28 @@
         <div class="row">
 
             <div class="col-lg-4">
-                <div class="card">
-                    <img src="{{ asset('storage/'.$product->image) }}"
-                        class="rounded img-fluid"
-                        alt="{{ $product->product_name }}">
-                </div>
-            </div>
+
+    <div class="card mb-3">
+        <img id="mainImage"
+            src="{{ asset('storage/'.$product->image[0]) }}"
+            class="img-fluid rounded"
+            alt="{{ $product->product_name }}">
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        @foreach($product->image as $img)
+
+        <img src="{{ asset('storage/'.$img) }}"
+            class="img-thumbnail thumb-img"
+            style="width:70px; cursor:pointer;"
+            onclick="changeImage(this)">
+
+        @endforeach
+
+    </div>
+
+</div>
 
             <div class="col-lg-8">
                 <h3>{{ $product->product_name }}</h3>
@@ -136,6 +165,13 @@
             qty.value = parseInt(qty.value) - 1;
         }
     }
+</script>
+
+<script>
+function changeImage(element)
+{
+    document.getElementById("mainImage").src = element.src;
+}
 </script>
 
 @endsection
