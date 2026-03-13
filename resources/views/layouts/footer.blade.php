@@ -1,5 +1,5 @@
 <footer class="text-center p-3 theme-footer text-light">
-    © 2026 Skardu cart .All right resverse . Design and Develop by IK Solution
+    © 2026 Skardu cart .All right resverse . Design and Develop by Teckclick Solution
 </footer>
 
 

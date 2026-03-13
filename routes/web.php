@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Ordercontroller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CategoryController;
@@ -10,6 +11,8 @@ use App\Http\Controllers\ProductdetailController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
 
@@ -36,6 +39,19 @@ Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('ca
 
 
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::post('/stripe-checkout', [CheckoutController::class, 'stripeCheckout'])->name('stripe.checkout');
+Route::get('/order-success/{id}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+
+Route::post('/stripe/checkout',[PaymentController::class,'checkout'])->name('stripe.checkout');
+
+Route::get('/payment/success',[PaymentController::class,'success'])->name('payment.success');
+
+Route::get('/payment/cancel',[PaymentController::class,'cancel'])->name('payment.cancel');
+
+
+Route::get('/checkout',[CheckoutController::class,'checkout'])->name('checkout');
+
+Route::post('/stripe-success/{order}', [CheckoutController::class,'stripeSuccess'])->name('stripe.success');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/admin/dashboard', [DashbordController::class, 'index'])
@@ -60,6 +76,9 @@ Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])-
      Route::put('/product/{id}', [ProductController::class, 'updateproduct'])->name('product.update');
      Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
      
+
+     Route::get('/admin/orders',[AdminOrderController::class, 'orders'])->name('admin.order.orders');
+          Route::get('/admin/orders/{id}',[AdminOrderController::class, 'view'])->name('admin.order.view');
 
 
 

@@ -45,14 +45,14 @@
 
         </div>
 
-        <div class="row theme-product mt-5">
+        <div class="row theme-product ">
 
             @foreach($products as $product)
 
             <div class="col-lg-3 mt-4">
                 <div class="card">
                     <a href="{{ route('product.show', $product->id) }}">
-                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                        <img src="{{ asset('storage/'.(is_array($product->image) ? $product->image[0] : $product->image)) }}" class="card-img-top"  alt="product">
                     </a>
 
                     <div class="card-body">
@@ -94,7 +94,7 @@
             <div class="col-lg-3 mt-4">
                 <div class="card">
                     <a href="{{ route('product.show', $product->id) }}">
-                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                       <img src="{{ asset('storage/'.(is_array($product->image) ? $product->image[0] : $product->image)) }}" class="card-img-top" alt="product">
                     </a>
 
                     <div class="card-body">
@@ -135,7 +135,7 @@
             <div class="col-lg-3 mt-4">
                 <div class="card">
                     <a href="{{ route('product.show', $product->id) }}">
-                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                       <img src="{{ asset('storage/'.(is_array($product->image) ? $product->image[0] : $product->image)) }}" class="card-img-top" alt="product">
                     </a>
 
                     <div class="card-body">
@@ -179,7 +179,7 @@
             <div class="col-lg-3 mt-4">
                 <div class="card">
                     <a href="{{ route('product.show', $product->id) }}">
-                        <img src="{{ asset('storage/'.$product->image) }}" class="card-img-top" alt="product">
+                        <img src="{{ asset('storage/'.(is_array($product->image) ? $product->image[0] : $product->image)) }}" class="card-img-top" alt="product">
                     </a>
 
                     <div class="card-body">

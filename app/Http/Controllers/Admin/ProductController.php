@@ -9,6 +9,7 @@ use App\Models\ProductProperty;
 use App\Models\ProductPropertyValue;
 use App\Models\Category;
 use App\Models\Subcategories;
+use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -41,7 +42,8 @@ class ProductController extends Controller
             'subcategory_id' => 'required',
             'quantity' => 'required|integer',
             'description' => 'required',
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:10048',
+            'image' => 'required',
+            'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
         ]);
 
         $imagePaths = [];
@@ -55,7 +57,7 @@ class ProductController extends Controller
             }
         }
 
-        Product::create([
+        $product = Product::create([
             'product_name' => $request->product_name,
             'price' => $request->price,
             'category_id' => $request->category_id,
@@ -201,4 +203,8 @@ class ProductController extends Controller
             ->route('admin.product.products')
             ->with('success', 'Product deleted successfully');
     }
+
+   
+
+
 }

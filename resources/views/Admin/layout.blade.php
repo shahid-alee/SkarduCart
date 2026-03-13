@@ -284,22 +284,22 @@
                             </ul>
                         </div>
                     </li>
-                    <!-- <li class="nav-item">
+                    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
                             <i class="menu-icon mdi mdi-layers-outline"></i>
-                            <span class="menu-title">Location</span>
+                            <span class="menu-title">Orders</span>
                             <i class="menu-arrow"></i>
                         </a>
                         <div class="collapse" id="icons">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"> <a class="nav-link" href="#">Country list</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Add Country</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">State list</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="#">Add state</a></li>
+                                <li class="nav-item"> <a class="nav-link" href="{{route('admin.order.orders')}}">Order list</a></li>
+                                <!-- <li class="nav-item"> <a class="nav-link" href="#">Add Country</a></li> -->
+                                <!-- <li class="nav-item"> <a class="nav-link" href="#">State list</a></li> -->
+                                <!-- <li class="nav-item"> <a class="nav-link" href="#">Add state</a></li> -->
                             </ul>
                         </div>
                     </li>
-                        <li class="nav-item">
+                    <!--    <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
                             <i class="menu-icon mdi mdi-account-circle-outline"></i>
                             <span class="menu-title">courses</span>
@@ -335,9 +335,9 @@
             @yield('admin-dashboard-subcategory')
             @yield('admin-subcategory-add')
 
-            <!--  @yield('admin-country-add')
-            @yield('admin-countries-index')
-            @yield('admin-state-add')
+            @yield('admin-dashboard-orders')
+            @yield('admin-dashboard-orders.view')
+            <!--   @yield('admin-state-add')
             @yield('admin-state-index')
             @yield('admin-course-add')
             @yield('admin-course-index')

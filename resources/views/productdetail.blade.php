@@ -8,15 +8,15 @@
 
 
 <style>
-.thumb-img{
-transition:0.3s;
-border:2px solid transparent;
-}
+    .thumb-img {
+        transition: 0.3s;
+        border: 2px solid transparent;
+    }
 
-.thumb-img:hover{
-border:2px solid #ff6600;
-transform:scale(1.05);
-}
+    .thumb-img:hover {
+        border: 2px solid #ff6600;
+        transform: scale(1.05);
+    }
 </style>
 
 <div class="container-fluid bg-light p-5">
@@ -31,27 +31,27 @@ transform:scale(1.05);
 
             <div class="col-lg-4">
 
-    <div class="card mb-3">
-        <img id="mainImage"
-            src="{{ asset('storage/'.$product->image[0]) }}"
-            class="img-fluid rounded"
-            alt="{{ $product->product_name }}">
-    </div>
+                <div class="card mb-3">
+                    <img id="mainImage"
+                        src="{{ asset('storage/'.$product->image[0]) }}"
+                        class="img-fluid rounded"
+                        alt="{{ $product->product_name }}">
+                </div>
 
-    <div class="d-flex flex-wrap gap-2">
+                <div class="d-flex flex-wrap gap-2">
 
-        @foreach($product->image as $img)
+                    @foreach($product->image as $img)
 
-        <img src="{{ asset('storage/'.$img) }}"
-            class="img-thumbnail thumb-img"
-            style="width:70px; cursor:pointer;"
-            onclick="changeImage(this)">
+                    <img src="{{ asset('storage/'.$img) }}"
+                        class="img-thumbnail thumb-img"
+                        style="width:70px; cursor:pointer;"
+                        onclick="changeImage(this)">
 
-        @endforeach
+                    @endforeach
 
-    </div>
+                </div>
 
-</div>
+            </div>
 
             <div class="col-lg-8">
                 <h3>{{ $product->product_name }}</h3>
@@ -71,20 +71,29 @@ transform:scale(1.05);
                     </div>
                 </div>
 
+
                 @foreach($product->properties as $property)
 
-                <div class="mb-2">
+                <div class="mb-3">
 
                     <strong>{{ ucfirst($property->property_name) }} :</strong>
 
-                    @foreach($property->values as $value)
+                    <div class="mt-2">
 
-                    <span class="badge bg-secondary">
-                        {{ $value->value }}
-                    </span>
+                        @foreach($property->values as $value)
 
-                    @endforeach
+                        <label class="me-3">
+                            <input type="radio"
+                                name="property[{{ $property->id }}]"
+                                value="{{ $value->id }}"
+                                required>
 
+                            {{ $value->value }}
+                        </label>
+
+                        @endforeach
+
+                    </div>
                 </div>
 
                 @endforeach
@@ -95,27 +104,46 @@ transform:scale(1.05);
                     </p>
                 </div>
 
-                <form action="{{ route('cart.add',$product->id) }}" method="POST">
-                    @csrf
-                    <div class="d-flex flex-row align-items-center mb-3">
-                        <div class="me-2">Quantity :</div>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="decreaseQty()">-</button>
-                        <input type="number"
-                            name="quantity"
-                            id="quantity"
-                            value="1"
-                            min="1"
-                            class="form-control mx-2 text-center"
-                            style="width:70px;">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="increaseQty()">+</button>
-                    </div>
-                    <button class="btn theme-green-btn text-light rounded-pill me-3">
-                        Add to Cart
-                    </button>
-                </form>
-                <a href="#" class="btn theme-orange-btn text-light rounded-pill">
-                    Buy Now
-                </a>
+              @auth
+<form action="{{ route('cart.add',$product->id) }}" method="POST">
+    @csrf
+
+    <div class="d-flex flex-row align-items-center mb-3">
+        <div class="me-2">Quantity :</div>
+
+        <button type="button" class="btn btn-secondary btn-sm" onclick="decreaseQty()">-</button>
+
+        <input type="number"
+            name="quantity"
+            id="quantity"
+            value="1"
+            min="1"
+            class="form-control mx-2 text-center"
+            style="width:70px;">
+
+        <button type="button" class="btn btn-secondary btn-sm" onclick="increaseQty()">+</button>
+    </div>
+
+    <button class="btn theme-green-btn text-light rounded-pill me-3">
+        Add to Cart
+    </button>
+</form>
+
+<a href="{{ route('checkout') }}" class="btn theme-orange-btn text-light mt-3 rounded-pill">
+    Buy Now
+</a>
+@endauth
+
+
+@guest
+<a href="{{ route('login.form') }}" class="btn theme-green-btn text-light rounded-pill me-3">
+    Add to Cart
+</a>
+
+<a href="{{ route('login.form') }}" class="btn theme-orange-btn text-light mt-3 rounded-pill">
+    Buy Now
+</a>
+@endguest
             </div>
         </div>
     </div>
@@ -127,10 +155,7 @@ transform:scale(1.05);
         <p>{{ $product->description }}</p>
     </div>
 
-
-
     <hr>
-
 
     <!-- Reviews -->
     <section>
@@ -168,10 +193,9 @@ transform:scale(1.05);
 </script>
 
 <script>
-function changeImage(element)
-{
-    document.getElementById("mainImage").src = element.src;
-}
+    function changeImage(element) {
+        document.getElementById("mainImage").src = element.src;
+    }
 </script>
 
 @endsection
