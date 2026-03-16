@@ -18,7 +18,7 @@ class SubcategoryController extends Controller
 
     $products = Product::where('subcategory_id', $id)->get();
 
-    return view('category', compact('products','subcategories'));
+    return view('pages.category', compact('products','subcategories'));
 }
 
   public function subcategories()

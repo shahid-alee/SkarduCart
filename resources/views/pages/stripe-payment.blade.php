@@ -35,7 +35,7 @@
             document.getElementById('card-errors').textContent = error.message;
             payBtn.disabled = false;
         } else if(paymentIntent.status === 'succeeded'){
-            // Payment successful, update order
+         
             fetch("{{ route('stripe.success', $order->id) }}", {
                 method: "POST",
                 headers: {

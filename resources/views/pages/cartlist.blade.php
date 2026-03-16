@@ -126,9 +126,17 @@
                 </div>
 
                 <div class="mt-4">
-                    <a href="{{route('checkout')}}" class="btn theme-orange-btn text-light rounded-pill w-100">
+                    @auth
+                    <a href="{{ route('checkout') }}" class="btn theme-orange-btn text-light rounded-pill w-100">
                         Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
                     </a>
+                    @endauth
+
+                    @guest
+                    <a href="{{ route('login.form') }}" class="btn theme-orange-btn text-light rounded-pill w-100">
+                        Login to Checkout <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    @endguest
                 </div>
 
             </div>

@@ -9,12 +9,12 @@ class ProductdetailController extends Controller
 {
 public function detail($id)
 {
-    $product = Product::findOrFail($id);
+    $product = Product::with(['reviews.user'])->findOrFail($id);
     $products = Product::where('category_id', $product->category_id)
                 ->where('id','!=',$id)
                 ->take(4)
                 ->get();
 
-    return view('productdetail', compact('product','products'));
+    return view('pages.productdetail', compact('product','products'));
 }
 }

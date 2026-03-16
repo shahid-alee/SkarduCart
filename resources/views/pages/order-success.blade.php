@@ -18,21 +18,26 @@
 
                     <h2 class="card-title mt-4">Order Created Successfully!</h2>
                     <p class="card-text mt-3">
-                        Thank you, <strong>{{ $order->first_name }} {{ $order->last_name }}</strong>, 
+                        Thank you, <strong>{{ $order->first_name }} {{ $order->last_name }}</strong>,
                         for your order. Your order ID is <strong>#{{ $order->id }}</strong>.
                     </p>
 
                     <p class="card-text">
-                        Payment Status: 
+                        Payment Status:
                         @if($order->payment_status == 'paid')
-                            <span class="text-success">{{ ucfirst($order->payment_status) }}</span>
+                        <span class="text-success">{{ ucfirst($order->payment_status) }}</span>
                         @else
-                            <span class="text-warning">{{ ucfirst($order->payment_status) }}</span>
+                        <span class="text-warning">{{ ucfirst($order->payment_status) }}</span>
                         @endif
                     </p>
 
                     <a href="{{ url('/') }}" class="btn btn-primary mt-4 rounded-pill">
                         Back to Home
+                    </a>
+
+                    <a href="{{ route('review.create',$order->id) }}"
+                        class="btn btn-success rounded-pill mt-3">
+                        Leave Review
                     </a>
 
                 </div>

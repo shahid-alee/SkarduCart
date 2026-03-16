@@ -144,17 +144,17 @@
 
                             <h5>Payment Method</h5>
 
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="radio" name="payment" value="cod" checked>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="payment" value="card" checked>
                                 <label class="form-check-label">
-                                    Cash On Delivery
+                                    <h5> Credit / Debit Card</h5>
                                 </label>
                             </div>
 
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment" value="card">
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="radio" name="payment" value="cod">
                                 <label class="form-check-label">
-                                    Credit / Debit Card
+                                    <h5> Cash On Delivery</h5>
                                 </label>
                             </div>
 

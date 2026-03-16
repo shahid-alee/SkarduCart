@@ -11,7 +11,7 @@ use App\Http\Controllers\ProductdetailController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
@@ -28,36 +28,32 @@ Route::get('/', [HomeController::class, 'index']);
 
 Route::get('/product/{id}', [ProductdetailController::class, 'detail'])->name('product.show');
 
-Route::get('/category/{id}', [CategoryController::class,'detail'])->name('category.products');
 
+Route::get('/category/{id}', [CategoryController::class,'detail'])->name('category.products');
 Route::get('/subcategory/{id}', [SubcategoryController::class,'detail'])->name('subcategory.products');
 
+
 Route::get('/cart-list', [CartController::class,'list'])->name('cart.list');
-Route::post('/add-to-cart/{id}', [CartController::class,'add'])->name('cart.add');
+Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add')->middleware('auth');
+
+
 Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.update');
 Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
 
 
-Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout')->middleware('auth');
 Route::post('/stripe-checkout', [CheckoutController::class, 'stripeCheckout'])->name('stripe.checkout');
 Route::get('/order-success/{id}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
-
-Route::post('/stripe/checkout',[PaymentController::class,'checkout'])->name('stripe.checkout');
-
-Route::get('/payment/success',[PaymentController::class,'success'])->name('payment.success');
-
-Route::get('/payment/cancel',[PaymentController::class,'cancel'])->name('payment.cancel');
-
-
-Route::get('/checkout',[CheckoutController::class,'checkout'])->name('checkout');
-
 Route::post('/stripe-success/{order}', [CheckoutController::class,'stripeSuccess'])->name('stripe.success');
 
-Route::middleware(['auth'])->group(function () {
-    Route::get('/admin/dashboard', [DashbordController::class, 'index'])
-        ->name('admin.dashboard');
 
-        
+Route::get('/review/{order_id}', [ReviewController::class,'create'])->name('review.create')->middleware('auth');
+Route::post('/review/store', [ReviewController::class,'store'])->name('review.store')->middleware('auth');
+
+
+Route::middleware(['auth'])->group(function () {
+Route::get('/admin/dashboard', [DashbordController::class, 'index'])->name('admin.dashboard');
+    
 });
 
 
@@ -68,6 +64,7 @@ Route::post('/admin/users', [UserController::class, 'store'])->name('user.store'
      Route::put('/user/{id}', [UserController::class, 'update'])->name('user.update');
      Route::delete('/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
+
 Route::get('/admin/products',[ProductController::class, 'products'])->name('admin.product.products');
 Route::get('/admin/product',[ProductController::class, 'createproduct'])->name('product.create');
 Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])->name('product.store');
@@ -77,8 +74,9 @@ Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])-
      Route::delete('/product/{id}', [ProductController::class, 'destroy'])->name('product.destroy');
      
 
-     Route::get('/admin/orders',[AdminOrderController::class, 'orders'])->name('admin.order.orders');
-          Route::get('/admin/orders/{id}',[AdminOrderController::class, 'view'])->name('admin.order.view');
+
+Route::get('/admin/orders',[AdminOrderController::class, 'orders'])->name('admin.order.orders');
+     Route::get('/admin/orders/{id}',[AdminOrderController::class, 'view'])->name('admin.order.view');
 
 
 

@@ -17,7 +17,7 @@ class CheckoutController extends Controller
          return redirect()->route('cart.list')->with('error', 'Your cart is empty.');
       }
 
-      return view('checkout', compact('cart'));
+      return view('pages.checkout', compact('cart'));
    }
 
    public function stripeCheckout(Request $request)
@@ -79,7 +79,7 @@ class CheckoutController extends Controller
          Stripe::setApiKey(env('STRIPE_SECRET'));
 
          $paymentIntent = PaymentIntent::create([
-            'amount' => $total * 100, // amount in cents
+            'amount' => $total * 100,
             'currency' => 'usd',
             'payment_method_types' => ['card'],
             'metadata' => [
@@ -90,21 +90,21 @@ class CheckoutController extends Controller
          // Clear cart only after payment
          session()->put('payment_intent_id', $paymentIntent->id);
 
-         return view('stripe-payment', [
+         return view('pages.stripe-payment', [
             'clientSecret' => $paymentIntent->client_secret,
             'order' => $order,
          ]);
       }
 
-      // COD: clear cart
+      // COD: clear cart 
       session()->forget('cart');
 
-      return redirect()->route('order.pay', $order->id);
+      return redirect()->route('stripe.success', $order->id);
    }
 
    public function orderSuccess($id)
    {
       $order = Order::with('items')->findOrFail($id);
-      return view('order-success', compact('order'));
+      return view('pages.order-success', compact('order'));
    }
 }

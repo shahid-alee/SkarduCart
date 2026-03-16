@@ -42,7 +42,7 @@ class CartController extends Controller
     {
         $cart = session()->get('cart', []);
 
-        return view('cartlist', compact('cart'));
+        return view('pages.cartlist', compact('cart'));
     }
 
     public function update(Request $request, $id)

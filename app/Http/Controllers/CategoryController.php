@@ -20,7 +20,7 @@ class CategoryController extends Controller
 
         $products = Product::where('category_id', $id)->get();
 
-        return view('category', compact('products', 'subcategories'));
+        return view('pages.category', compact('products', 'subcategories'));
     }
 
     public function categories()
