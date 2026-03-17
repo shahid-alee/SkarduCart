@@ -13,6 +13,7 @@ class CheckoutController extends Controller
    public function checkout()
    {
       $cart = session('cart') ?? [];
+     
       if (empty($cart)) {
          return redirect()->route('cart.list')->with('error', 'Your cart is empty.');
       }
@@ -60,7 +61,7 @@ class CheckoutController extends Controller
          'delivery' => $delivery,
          'total' => $total,
          'payment_method' => $request->payment,
-         'payment_status' => $request->payment == 'cod' ? 'pending' : 'pending', // pending until card success
+         'payment_status' => $request->payment == 'cod' ? 'pending' : 'pending', 
       ]);
 
       // Save order items
@@ -99,7 +100,7 @@ class CheckoutController extends Controller
       // COD: clear cart 
       session()->forget('cart');
 
-      return redirect()->route('stripe.success', $order->id);
+      return redirect()->route('order.success', $order->id);
    }
 
    public function orderSuccess($id)

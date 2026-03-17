@@ -35,10 +35,10 @@
                         Back to Home
                     </a>
 
-                    <a href="{{ route('review.create',$order->id) }}"
-                        class="btn btn-success rounded-pill mt-3">
-                        Leave Review
-                    </a>
+                    <a href="{{ route('order.tracking', $order->id) }}"
+                    class="btn btn-dark mt-3">
+                    Track Your Order
+                </a>
 
                 </div>
             </div>

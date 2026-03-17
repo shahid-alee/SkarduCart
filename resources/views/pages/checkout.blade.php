@@ -39,7 +39,12 @@
 
                         <div class="col-md-12 mb-3">
                             <label>Email</label>
-                            <input type="email" name="email" class="form-control" required>
+                            <input
+                                type="email"
+                                name="email"
+                                class="form-control"
+                                value="{{ auth()->check() ? auth()->user()->email : '' }}"
+                                readonly>
                         </div>
 
                         <div class="col-md-12 mb-3">

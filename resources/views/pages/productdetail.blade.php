@@ -127,7 +127,7 @@
                 </form>
 
                 @auth
-                <a href="{{ route('checkout') }}" class="btn theme-orange-btn text-light mt-3 rounded-pill">
+                <a href="{{ route('checkout',$product->id) }}" class="btn theme-orange-btn text-light mt-3 rounded-pill">
                     Buy Now
                 </a>
                 @endauth

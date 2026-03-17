@@ -12,6 +12,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
@@ -24,7 +25,7 @@ Route::post('/account/signup',[RegisterController::class, 'signupUser'])->name('
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 Route::get('/product/{id}', [ProductdetailController::class, 'detail'])->name('product.show');
 
@@ -41,6 +42,11 @@ Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.u
 Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
 
 
+
+
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+
+
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout')->middleware('auth');
 Route::post('/stripe-checkout', [CheckoutController::class, 'stripeCheckout'])->name('stripe.checkout');
 Route::get('/order-success/{id}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
@@ -55,6 +61,7 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/admin/dashboard', [DashbordController::class, 'index'])->name('admin.dashboard');
     
 });
+
 
 
 Route::get('/admin/users',[UserController::class, 'users'])->name('admin.user.users');
@@ -77,7 +84,8 @@ Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])-
 
 Route::get('/admin/orders',[AdminOrderController::class, 'orders'])->name('admin.order.orders');
      Route::get('/admin/orders/{id}',[AdminOrderController::class, 'view'])->name('admin.order.view');
-
+     Route::post('/admin/order-status', [AdminOrderController::class, 'updateStatus'])->name('admin.order.orderstatus');
+     Route::get('/order-tracking/{id}', function($id){$order = \App\Models\Order::with('tracking')->findOrFail($id);return view('pages.order-tracking', compact('order'));})->name('order.tracking');
 
 
 Route::get('/admin/categories',[CategoryController::class, 'categories'])->name('admin.category.categories');

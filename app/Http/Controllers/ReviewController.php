@@ -25,6 +25,9 @@ class ReviewController extends Controller
             'review' => $request->review
         ]);
 
-        return redirect()->back()->with('success','Review submitted successfully');
+        // return redirect()->back()->with('success','Review submitted successfully');
+        return redirect()
+        ->route('index')
+        ->with('success','Review submitted successfully');
     }
 }
