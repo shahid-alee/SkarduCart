@@ -8,50 +8,45 @@ use App\Models\Order;
 
 class StripeWebhookController extends Controller
 {
-    public function handleWebhook(Request $request)
-    {
-        $payload = $request->getContent();
-        $sigHeader = $request->header('Stripe-Signature');
-        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+   public function handleWebhook(Request $request)
+{
+    \Log::info('Webhook HIT');
 
-        try {
-            $event = Webhook::constructEvent(
-                $payload,
-                $sigHeader,
-                $endpoint_secret
-            );
-        } catch (\Exception $e) {
-            return response('Invalid signature', 400);
-        }
+    $payload = $request->getContent();
+    $sigHeader = $request->header('Stripe-Signature');
+    $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
 
-        if ($event->type == 'payment_intent.succeeded') {
-
-            $paymentIntent = $event->data->object;
-
-            $orderId = $paymentIntent->metadata->order_id;
-
-            $order = Order::find($orderId);
-
-            if ($order) {
-                $order->payment_status = 'paid';
-                $order->save();
-            }
-        }
-
-        if ($event->type == 'payment_intent.payment_failed') {
-
-            $paymentIntent = $event->data->object;
-
-            $orderId = $paymentIntent->metadata->order_id;
-
-            $order = Order::find($orderId);
-
-            if ($order) {
-                $order->payment_status = 'failed';
-                $order->save();
-            }
-        }
-
-        return response('Webhook handled', 200);
+    try {
+        $event = Webhook::constructEvent(
+            $payload,
+            $sigHeader,
+            $endpoint_secret
+        );
+    } catch (\Exception $e) {
+        \Log::error('Webhook Error: '.$e->getMessage());
+        return response('Invalid signature', 400);
     }
+
+    \Log::info('Event Type: '.$event->type);
+
+    if ($event->type == 'payment_intent.succeeded') {
+
+        $paymentIntent = $event->data->object;
+
+        $orderId = $paymentIntent->metadata->order_id;
+
+        \Log::info('Order ID: '.$orderId);
+
+        $order = Order::find($orderId);
+
+        if ($order) {
+            $order->payment_status = 'paid';
+            $order->save();
+
+            \Log::info('Payment Updated to PAID');
+        }
+    }
+
+    return response('Webhook handled', 200);
+}
 }

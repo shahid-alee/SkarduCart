@@ -102,3 +102,82 @@ border:2px solid transparent;
 border:2px solid #ff6600;
 transform:scale(1.05);
 }
+
+/* traking page */
+.timeline {
+    position: relative;
+    margin-left: 20px;
+    padding-left: 30px;
+    border-left: 3px solid #ddd;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-icon {
+    position: absolute;
+    left: -42px;
+    top: 0;
+    background: #ccc;
+    color: #fff;
+    width: 25px;
+    height: 25px;
+    text-align: center;
+    border-radius: 50%;
+    line-height: 25px;
+    font-size: 12px;
+}
+
+.timeline-item.active .timeline-icon {
+    background: #28a745;
+}
+
+.timeline-content h5 {
+    margin: 0;
+    font-weight: 600;
+}
+
+.timeline-content p {
+    margin: 5px 0;
+}
+
+/* review */
+
+.square-rating-input {
+    direction: rtl; /* magic trick */
+}
+
+.square-rating-input .squares {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
+.square-rating-input input {
+    display: none;
+}
+
+.square-rating-input label {
+    cursor: pointer;
+}
+
+.square {
+    font-size: 28px;
+    color: #ccc;
+    transition: 0.3s;
+}
+
+.square-rating-input label:hover .square,
+.square-rating-input label:hover ~ label .square {
+    color: #ffc107;
+}
+
+.square-rating-input input:checked ~ label .square {
+    color: #ffc107;
+}

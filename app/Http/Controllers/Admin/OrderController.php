@@ -24,19 +24,46 @@ class OrderController extends Controller
     return view('admin.order.orderview', compact('order'));
 }
 
-public function updateStatus(Request $request, $id)
-{
-    $order = Order::findOrFail($id);
+    public function edit($id)
+    {
+        $order = Order::findOrFail($id);
+        return view('admin.order.orderedit', compact('order'));
+    }
 
-    $order->order_status = $request->status;
-    $order->save();
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required'
+        ]);
 
-    OrderTracking::create([
-        'order_id' => $order->id,
-        'status' => $request->status,
-        'message' => 'Order updated to ' . $request->status
-    ]);
+        $order = Order::findOrFail($id);
 
-    return back()->with('success', 'Order status updated');
-}
+        $order->order_status = $request->status;
+        $order->save();
+
+        OrderTracking::create([
+            'order_id' => $order->id,
+            'status' => $request->status,
+            'message' => 'Order updated to ' . ucfirst($request->status)
+        ]);
+
+        return redirect()->route('admin.order.orders')
+            ->with('success', 'Order status updated successfully');
+    }
+
+// public function updateStatus(Request $request, $id)
+// {
+//     $order = Order::findOrFail($id);
+
+//     $order->order_status = $request->status;
+//     $order->save();
+
+//     OrderTracking::create([
+//         'order_id' => $order->id,
+//         'status' => $request->status,
+//         'message' => 'Order updated to ' . $request->status
+//     ]);
+
+//     return back()->with('success', 'Order status updated');
+// }
 }

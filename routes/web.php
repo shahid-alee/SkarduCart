@@ -42,9 +42,9 @@ Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.u
 Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
 
 
+Route::get('/order-tracking/{id}', [CheckoutController::class, 'orderTracking'])->name('order.tracking');
 
-
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook']);
+Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('stripe.webhook');
 
 
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout')->middleware('auth');
@@ -84,8 +84,14 @@ Route::post('/admin/store/product', [ProductController::class, 'storeproduct'])-
 
 Route::get('/admin/orders',[AdminOrderController::class, 'orders'])->name('admin.order.orders');
      Route::get('/admin/orders/{id}',[AdminOrderController::class, 'view'])->name('admin.order.view');
-     Route::post('/admin/order-status', [AdminOrderController::class, 'updateStatus'])->name('admin.order.orderstatus');
-     Route::get('/order-tracking/{id}', function($id){$order = \App\Models\Order::with('tracking')->findOrFail($id);return view('pages.order-tracking', compact('order'));})->name('order.tracking');
+// Route::get('/order-tracking/{id}', [CheckoutController::class, 'orderTracking'])->name('order.tracking');
+    Route::post('/admin/order-status/{order}', [OrderController::class, 'updateStatus'])->name('admin.order.order');
+
+     Route::get('/order/{id}/edit', [OrderController::class, 'edit'])
+        ->name('admin.order.edit');
+
+    Route::post('/order/{id}/update-status', [OrderController::class, 'updateStatus'])
+        ->name('admin.order.updateStatus');
 
 
 Route::get('/admin/categories',[CategoryController::class, 'categories'])->name('admin.category.categories');

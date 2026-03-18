@@ -21,15 +21,15 @@ class Order extends Model
         'delivery',
         'total',
         'payment_method',
-        'payment_status'
+        'payment_status',
+        'order_status' 
     ];
 
     public function items()
     {
         return $this->hasMany(OrderItem::class);
     }
-
-    public function tracking()
+public function tracking()
 {
     return $this->hasMany(OrderTracking::class)->latest();
 }

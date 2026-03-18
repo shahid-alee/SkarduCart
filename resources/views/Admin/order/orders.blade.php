@@ -1,140 +1,88 @@
 @extends('admin.layout')
-
 @section('admin-dashboard-orders')
 
 <div class="main-panel">
     <div class="content-wrapper">
+        <div class="row">
+            <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Orders</h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <!-- <th>Customer</th> -->
+                                        <th>Email</th>
+                                        <th>Total</th>
+                                        <th>Payment Method</th>
+                                        <th>Payment Status</th>
+                                        <th>Order Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($orders as $order)
+                                    <tr>
+                                        <td>{{ $order->id }}</td>
+                                        <!-- <td>{{ $order->first_name }} {{ $order->last_name }}</td> -->
+                                        <td>{{ $order->email }}</td>
+                                        <td>Rs {{ $order->total }}</td>
+                                        <td>{{ strtoupper($order->payment_method) }}</td>
+                                        <td>
 
-        <!-- Page Title -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3>Orders Dashboard</h3>
-        </div>
+                                            @if($order->payment_status == 'paid')
+                                            <span class="badge bg-success">Paid</span>
 
-        <!-- Success Message -->
-        @if(session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
+                                            @elseif($order->payment_status == 'pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
 
-        <!-- Orders Table -->
-        <div class="card">
-            <div class="card-body">
+                                            @else
+                                            <span class="badge bg-danger">Failed</span>
 
-                <h4 class="card-title mb-4">All Orders</h4>
+                                            @endif
 
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
+                                        </td>
+                                        <td>
+                                            @if($order->order_status == 'pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
 
-                        <thead class="table-dark">
-                            <tr>
-                                <th>ID</th>
-                                <th>Customer</th>
-                                <th>Email</th>
-                                <th>Total</th>
-                                <th>Payment</th>
-                                <th>Order Status</th>
-                                <th>Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                                            @elseif($order->order_status == 'processing')
+                                            <span class="badge bg-info">Processing</span>
 
-                        <tbody>
+                                            @elseif($order->order_status == 'shipped')
+                                            <span class="badge bg-primary">Shipped</span>
 
-                            @forelse($orders as $order)
-                            <tr>
+                                            @elseif($order->order_status == 'delivered')
+                                            <span class="badge bg-success">Delivered</span>
 
-                                <!-- ID -->
-                                <td>#{{ $order->id }}</td>
+                                            @else
+                                            <span class="badge bg-danger">Cancelled</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $order->created_at->format('d-m-Y') }}</td>
+                                        <td>
+                                            <a href="{{ route('admin.order.view', $order->id) }}" class="btn btn-info btn-sm">View</a>
+                                            <a href="{{ route('admin.order.edit', $order->id) }}">
+                                                <button type="button" class="btn btn-success btn-rounded btn-sm">EDIT</button>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
 
-                                <!-- Customer -->
-                                <td>
-                                    {{ $order->first_name }} {{ $order->last_name }}
-                                </td>
+                        <div class="mt-4 d-flex justify-content-end">
+                            {{ $orders->links('pagination::bootstrap-4') }}
+                        </div>
 
-                                <!-- Email -->
-                                <td>{{ $order->email }}</td>
-
-                                <!-- Total -->
-                                <td>Rs {{ $order->total }}</td>
-
-                                <!-- Payment Method -->
-                                <td>
-                                    <span class="badge bg-info">
-                                        {{ strtoupper($order->payment_method) }}
-                                    </span>
-                                </td>
-
-                                <!-- ORDER STATUS + UPDATE -->
-                                <td>
-
-                                    <!-- Current Status Badge -->
-                                    <span class="badge
-                                        @if($order->order_status == 'delivered') bg-success
-                                        @elseif($order->order_status == 'pending') bg-warning text-dark
-                                        @else bg-primary
-                                        @endif
-                                    ">
-                                        {{ ucfirst($order->order_status ?? 'placed') }}
-                                    </span>
-
-                                    <!-- Update Dropdown -->
-                                    <form action="{{ route('admin.order.orderstatus', $order->id) }}" method="POST" class="mt-2">
-                                        @csrf
-
-                                        <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-
-                                            <option value="placed" {{ $order->order_status == 'placed' ? 'selected' : '' }}>
-                                                Placed
-                                            </option>
-
-                                            <option value="pending" {{ $order->order_status == 'pending' ? 'selected' : '' }}>
-                                                Pending
-                                            </option>
-
-                                            <option value="delivered" {{ $order->order_status == 'delivered' ? 'selected' : '' }}>
-                                                Delivered
-                                            </option>
-
-                                        </select>
-                                    </form>
-
-                                </td>
-
-                                <!-- Date -->
-                                <td>{{ $order->created_at->format('d M Y') }}</td>
-
-                                <!-- Action -->
-                                <td>
-                                    <a href="{{ route('admin.order.view', $order->id) }}" 
-                                       class="btn btn-sm btn-primary">
-                                        View
-                                    </a>
-                                </td>
-
-                            </tr>
-
-                            @empty
-                            <tr>
-                                <td colspan="8" class="text-center">
-                                    No Orders Found
-                                </td>
-                            </tr>
-                            @endforelse
-
-                        </tbody>
-
-                    </table>
+                    </div>
                 </div>
-
-                <!-- Pagination -->
-                <div class="mt-4 d-flex justify-content-end">
-                    {{ $orders->links('pagination::bootstrap-4') }}
-                </div>
-
             </div>
         </div>
-
     </div>
 </div>
 

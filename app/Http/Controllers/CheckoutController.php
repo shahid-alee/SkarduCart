@@ -46,7 +46,7 @@ class CheckoutController extends Controller
       $delivery = 150;
       $total = $subtotal + $delivery;
 
-      // Save order first
+     
       $order = Order::create([
          'user_id' => auth()->id() ?? null,
          'first_name' => $request->first_name,
@@ -62,9 +62,9 @@ class CheckoutController extends Controller
          'total' => $total,
          'payment_method' => $request->payment,
          'payment_status' => $request->payment == 'cod' ? 'pending' : 'pending', 
+         'order_status' => 'pending', 
       ]);
 
-      // Save order items
       foreach ($cart as $id => $item) {
          OrderItem::create([
             'order_id' => $order->id,
@@ -88,7 +88,6 @@ class CheckoutController extends Controller
             ]
          ]);
 
-         // Clear cart only after payment
          session()->put('payment_intent_id', $paymentIntent->id);
 
          return view('pages.stripe-payment', [
@@ -97,7 +96,6 @@ class CheckoutController extends Controller
          ]);
       }
 
-      // COD: clear cart 
       session()->forget('cart');
 
       return redirect()->route('order.success', $order->id);
@@ -108,4 +106,10 @@ class CheckoutController extends Controller
       $order = Order::with('items')->findOrFail($id);
       return view('pages.order-success', compact('order'));
    }
+
+   public function orderTracking($id)
+{
+    $order = Order::with('tracking')->findOrFail($id);
+    return view('pages.order-tracking', compact('order'));
+}
 }

@@ -14,12 +14,12 @@
             <div class="card text-center p-5 shadow-sm">
                 <div class="card-body">
 
-                    <i class="fa-solid fa-check-circle text-success" style="font-size:60px;"></i>
+                    <i class="fa-solid fa-check-circle text-success" style="font-size:80px;"></i>
 
                     <h2 class="card-title mt-4">Order Created Successfully!</h2>
                     <p class="card-text mt-3">
                         Thank you, <strong>{{ $order->first_name }} {{ $order->last_name }}</strong>,
-                        for your order. Your order ID is <strong>#{{ $order->id }}</strong>.
+                        for your order. The  products will delivered to you very soon .
                     </p>
 
                     <p class="card-text">
@@ -35,8 +35,13 @@
                         Back to Home
                     </a>
 
+                       <a href="{{ route('review.create', $order->id) }}"
+                    class="btn btn-dark mt-4 rounded-pill">
+                    Review
+                </a>
+
                     <a href="{{ route('order.tracking', $order->id) }}"
-                    class="btn btn-dark mt-3">
+                    class="btn btn-success mt-4 rounded-pill">
                     Track Your Order
                 </a>
 

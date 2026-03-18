@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderTracking extends Model
 {
-    protected $fillable = ['order_id', 'status', 'message'];
+    protected $fillable = [
+    'order_id',
+    'status',
+    'message'
+];
 
     public function order()
     {

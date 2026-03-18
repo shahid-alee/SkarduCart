@@ -293,7 +293,7 @@
                         <div class="collapse" id="icons">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" href="{{route('admin.order.orders')}}">Order list</a></li>
-                                <li class="nav-item"> <a class="nav-link" href="{{route('admin.order.orderstatus')}}">Order status</a></li>
+                                <!-- <li class="nav-item"> <a class="nav-link" href="#">Order status</a></li> -->
 
                                 <!-- <li class="nav-item"> <a class="nav-link" href="#">Add Country</a></li> -->
                                 <!-- <li class="nav-item"> <a class="nav-link" href="#">State list</a></li> -->
