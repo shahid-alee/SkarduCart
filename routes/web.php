@@ -30,6 +30,20 @@ Route::post('/profile/{id}', [ProfileController::class, 'profileUpdate'])->name(
 Route::get('change-password', [ProfileController::class, 'changePassword'])->name('change.password.form');
 Route::post('change-password', [ProfileController::class, 'changPasswordStore'])->name('change.admin.password');
 
+
+
+Route::middleware('auth')->group(function () {
+
+    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile-update');
+
+    Route::get('/change-password', [UserController::class, 'changePassword'])->name('user.changepassword.form');
+    Route::post('/change-password', [UserController::class, 'updatePassword'])->name('user.password.update');
+
+    Route::get('/orders', [UserController::class, 'orders'])->name('user.orders');
+
+});
+
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/', [HomeController::class, 'index'])->name('index');

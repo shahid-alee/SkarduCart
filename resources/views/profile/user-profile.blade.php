@@ -19,7 +19,7 @@
                     </div>
                     <div class="col-lg-4 align-self-center mb-3 mb-lg-0">
                         <div class="d-flex align-items-center flex-row flex-wrap">
-                            {{-- <div class="position-relative me-3">
+                            <div class="position-relative me-3">
                             <img src="{{asset('images/user/'.$profile->profile_image)}}" alt="" height="120" class="rounded-circle">
                             <a href="#" class="thumb-md justify-content-center d-flex align-items-center bg-primary text-white rounded-circle position-absolute end-0 bottom-0 border border-3 border-card-bg">
                                 <i class="fas fa-camera"></i>
@@ -27,7 +27,7 @@
                         </div>
                         <div class="">
                             <h5 class="fw-semibold fs-22 mb-1">{{ ('$profile->name') }}</h5>
-                        </div> --}}
+                        </div> 
                         </div>
                     </div>
                     <div class="card-body pt-0">

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Stripe\Stripe;
+use Illuminate\Support\Facades\Log;
 use Stripe\PaymentIntent;
 use Stripe\Webhook;
 
@@ -121,22 +122,21 @@ class CheckoutController extends Controller
 
 public function handleWebhook(Request $request)
 {
-    $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
-
     $payload = $request->getContent();
     $sig_header = $request->header('Stripe-Signature');
+    $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
 
     try {
-        $event = Webhook::constructEvent(
+        $event = \Stripe\Webhook::constructEvent(
             $payload,
             $sig_header,
             $endpoint_secret
         );
     } catch (\Exception $e) {
-        return response('Invalid payload', 400);
+        return response('Invalid signature', 400);
     }
 
-    // ✅ Handle successful payment
+    // ✅ PAYMENT SUCCESS
     if ($event->type === 'payment_intent.succeeded') {
 
         $paymentIntent = $event->data->object;
@@ -146,12 +146,67 @@ public function handleWebhook(Request $request)
         $order = Order::find($orderId);
 
         if ($order) {
-            $order->payment_status = 'paid';
-            $order->order_status = 'processing'; // optional
-            $order->save();
+            $order->update([
+                'payment_status' => 'paid',
+                'order_status' => 'processing'
+            ]);
+        }
+    }
+
+    // ❌ PAYMENT FAILED
+    if ($event->type === 'payment_intent.payment_failed') {
+
+        $paymentIntent = $event->data->object;
+        $orderId = $paymentIntent->metadata->order_id;
+
+        $order = Order::find($orderId);
+
+        if ($order) {
+            $order->update([
+                'payment_status' => 'failed'
+            ]);
         }
     }
 
     return response('Webhook handled', 200);
 }
+
+
+
+
+// public function handleWebhook(Request $request)
+// {
+//     $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+
+//     $payload = $request->getContent();
+//     $sig_header = $request->header('Stripe-Signature');
+
+//     try {
+//         $event = Webhook::constructEvent(
+//             $payload,
+//             $sig_header,
+//             $endpoint_secret
+//         );
+//     } catch (\Exception $e) {
+//         return response('Invalid payload', 400);
+//     }
+
+//     // ✅ Handle successful payment
+//     if ($event->type === 'payment_intent.succeeded') {
+
+//         $paymentIntent = $event->data->object;
+
+//         $orderId = $paymentIntent->metadata->order_id;
+
+//         $order = Order::find($orderId);
+
+//         if ($order) {
+//             $order->payment_status = 'paid';
+//             $order->order_status = 'processing'; // optional
+//             $order->save();
+//         }
+//     }
+
+//     return response('Webhook handled', 200);
+// }
 }

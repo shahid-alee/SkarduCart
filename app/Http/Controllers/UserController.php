@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -81,4 +83,30 @@ class UserController extends Controller
             ->route('admin.user.users')
             ->with('success', 'User deleted successfully.');
     }
+
+
+  public function profile()
+{
+    $user = Auth::user(); 
+
+    return view('user.profile', compact('user'));
+}
+
+public function orders()
+{
+    $user = Auth::user();
+
+    $orders = Order::where('user_id', $user->id)
+                    ->latest()
+                    ->get();
+
+    return view('user.orders', compact('orders'));
+}
+
+public function changePassword()
+{
+    $user = Auth::user();
+
+    return view('user.change-password', compact('user'));
+}
 }

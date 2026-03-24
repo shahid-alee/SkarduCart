@@ -86,4 +86,21 @@
     </div>
 </div>
 
+<script>
+stripe.confirmCardPayment(clientSecret, {
+    payment_method: {
+        card: cardElement
+    }
+}).then(function(result) {
+    if (result.error) {
+        // show error
+    } else {
+        if (result.paymentIntent.status === 'succeeded') {
+            window.location.href = "/order-success/" + orderId;
+        }
+    }
+});
+
+</script>
+
 @endsection

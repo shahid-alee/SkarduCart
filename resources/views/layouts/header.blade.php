@@ -38,14 +38,14 @@
                 </form>
             </div>
             <div>
-                <a href="#" class="text-decoration-none text-light ">Become a seller</a>
+                <a href="#" class="text-decoration-none mx-1 text-light ">Become a seller</a>
 
-                <a href="{{ route('cart.list') }}" class="btn theme-green-btn btn-sm text-light rounded-pill">
+                <a href="{{ route('cart.list') }}" class="btn theme-green-btn mx-1 btn-sm text-light rounded-pill">
                     <i class="fa-solid fa-cart-arrow-down"></i> Cart
                 </a>
 
                 @guest
-                <a href="{{ route('login.form') }}" class="btn theme-orange-btn btn-sm text-light rounded-pill">
+                <a href="{{ route('login.form') }}" class="btn theme-orange-btn mx-1  btn-sm text-light rounded-pill">
                     <i class="fa-solid fa-user"></i> Login
                 </a>
                 @endguest
@@ -54,12 +54,59 @@
 
                 <form action="{{ route('logout') }}" method="POST" class="d-inline">
                     @csrf
-                    <button type="submit" class="btn theme-orange-btn btn-sm text-light rounded-pill">
+                    <button type="submit" class="btn theme-orange-btn mx-1  btn-sm text-light rounded-pill">
                         <i class="fa-solid fa-right-from-bracket"></i> Logout
                     </button>
                 </form>
 
-                <span class="text-light me-2">{{ Auth::user()->name }}</span>
+               <div class="dropdown d-inline mx-1">
+    <a class="text-light dropdown-toggle text-decoration-none"
+       href="#"
+       id="userDropdown"
+       role="button"
+       data-bs-toggle="dropdown"
+       aria-expanded="false">
+
+        {{ Auth::user()->name }}
+    </a>
+
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+
+        <!-- Profile -->
+        <li>
+            <a class="dropdown-item" href="{{ route('user.profile') }}">
+                <i class="fa fa-user me-2"></i> My Profile
+            </a>
+        </li>
+
+        <!-- Change Password -->
+        <li>
+            <a class="dropdown-item" href="{{ route('user.changepassword.form') }}">
+                <i class="fa fa-lock me-2"></i> Change Password
+            </a>
+        </li>
+
+        <!-- Order History -->
+        <li>
+            <a class="dropdown-item" href="{{ route('user.orders') }}">
+                <i class="fa fa-shopping-bag me-2"></i> Order History
+            </a>
+        </li>
+
+        <li><hr class="dropdown-divider"></li>
+
+        <!-- Logout -->
+        <li>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="dropdown-item">
+                    <i class="fa fa-sign-out-alt me-2"></i> Logout
+                </button>
+            </form>
+        </li>
+
+    </ul>
+</div>
 
                 @endauth
             </div>

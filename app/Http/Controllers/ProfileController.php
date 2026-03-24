@@ -40,8 +40,7 @@ class ProfileController extends Controller
         $user->name = $request->name;
         $user->save();
 
-        return redirect()->route('admin-profile')->with('success', 'Profile updated successfully.');
-    }
+return back()->with('success', 'Profile updated successfully.');    }
 
     public function changePassword()
     {
@@ -64,6 +63,5 @@ class ProfileController extends Controller
             'password' => Hash::make($request->new_password)
         ]);
 
-        return redirect()->route('admin-profile')->with('success', 'Password Successfully Changed');
-    }
+return back()->with('success', 'Password updated successfully.');    }
 }
