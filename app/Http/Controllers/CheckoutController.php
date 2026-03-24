@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
+use Stripe\Webhook;
+
 
 class CheckoutController extends Controller
 {
@@ -111,5 +113,45 @@ class CheckoutController extends Controller
 {
     $order = Order::with('tracking')->findOrFail($id);
     return view('pages.order-tracking', compact('order'));
+}
+
+
+
+
+
+public function handleWebhook(Request $request)
+{
+    $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
+
+    $payload = $request->getContent();
+    $sig_header = $request->header('Stripe-Signature');
+
+    try {
+        $event = Webhook::constructEvent(
+            $payload,
+            $sig_header,
+            $endpoint_secret
+        );
+    } catch (\Exception $e) {
+        return response('Invalid payload', 400);
+    }
+
+    // ✅ Handle successful payment
+    if ($event->type === 'payment_intent.succeeded') {
+
+        $paymentIntent = $event->data->object;
+
+        $orderId = $paymentIntent->metadata->order_id;
+
+        $order = Order::find($orderId);
+
+        if ($order) {
+            $order->payment_status = 'paid';
+            $order->order_status = 'processing'; // optional
+            $order->save();
+        }
+    }
+
+    return response('Webhook handled', 200);
 }
 }

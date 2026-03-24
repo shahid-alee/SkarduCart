@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderReviewEmail;
 use App\Models\OrderItem;
 use App\Models\OrderTracking;
 use Illuminate\Http\Request;
@@ -12,17 +14,17 @@ class OrderController extends Controller
 {
     public function orders()
     {
-        $orders = Order::latest()->paginate(10); 
+        $orders = Order::latest()->paginate(10);
 
         return view('admin.order.orders', compact('orders'));
     }
 
     public function view($id)
-{
-    $order = Order::with('items')->findOrFail($id);
+    {
+        $order = Order::with('items')->findOrFail($id);
 
-    return view('admin.order.orderview', compact('order'));
-}
+        return view('admin.order.orderview', compact('order'));
+    }
 
     public function edit($id)
     {
@@ -47,23 +49,28 @@ class OrderController extends Controller
             'message' => 'Order updated to ' . ucfirst($request->status)
         ]);
 
+        // Send email ONLY when delivered
+        if ($request->status === 'delivered') {
+            Mail::to($order->email)->send(new OrderReviewEmail($order));
+        }
+
         return redirect()->route('admin.order.orders')
             ->with('success', 'Order status updated successfully');
     }
 
-// public function updateStatus(Request $request, $id)
-// {
-//     $order = Order::findOrFail($id);
+    // public function updateStatus(Request $request, $id)
+    // {
+    //     $order = Order::findOrFail($id);
 
-//     $order->order_status = $request->status;
-//     $order->save();
+    //     $order->order_status = $request->status;
+    //     $order->save();
 
-//     OrderTracking::create([
-//         'order_id' => $order->id,
-//         'status' => $request->status,
-//         'message' => 'Order updated to ' . $request->status
-//     ]);
+    //     OrderTracking::create([
+    //         'order_id' => $order->id,
+    //         'status' => $request->status,
+    //         'message' => 'Order updated to ' . $request->status
+    //     ]);
 
-//     return back()->with('success', 'Order status updated');
-// }
+    //     return back()->with('success', 'Order status updated');
+    // }
 }

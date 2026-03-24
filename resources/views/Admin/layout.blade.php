@@ -157,11 +157,12 @@
                             data-bs-toggle="dropdown"
                             aria-expanded="false">
 
-                            <img class="img-xs rounded-circle"
-                                src="{{ $user->profile_image
-                    ? asset('storage/'.$user->profile_image)
-                    : asset('assets/images/default-user.png') }}"
-                                alt="Profile image">
+                            <img class="rounded-circle"
+                                src="{{ $user->profile_image 
+        ? asset('images/users/'.$user->profile_image) 
+        : asset('assets/images/default-user.png') }}"
+                                alt="Profile image"
+                                style="width:50px; height:50px; object-fit:cover;">
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
@@ -169,7 +170,9 @@
 
                             <div class="dropdown-header text-center">
                                 <img class="rounded-circle"
-                                    src="{{ $user->profile_images ? asset('storage/'.$user->profile_images) : asset('assets/profile_images/default-user.png') }}"
+                                    src="{{ $user->profile_image 
+        ? asset('images/users/'.$user->profile_image) 
+        : asset('assets/images/default-user.png') }}"
                                     alt="Profile image"
                                     style="width:50px; height:50px; object-fit:cover;">
 
@@ -182,25 +185,25 @@
                                 </p>
                             </div>
 
-                            <a href="#" class="dropdown-item">
+                            <a href="{{route('admin-profile')}}" class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>
                                 My Profile
                             </a>
 
-                            <a class="dropdown-item">
+                            <a href="{{route('change.password.form')}}" class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i>
-                                Messages
+                                Change password
                             </a>
 
-                            <a class="dropdown-item">
+                            <!-- <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i>
-                                Activity
-                            </a>
+                                Order History
+                            </a> -->
 
-                            <a class="dropdown-item">
+                            <!-- <a class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i>
                                 FAQ
-                            </a>
+                            </a> -->
 
                             <form method="POST" action="{{route('logout')}}">
                                 @csrf
@@ -293,7 +296,7 @@
                         <div class="collapse" id="icons">
                             <ul class="nav flex-column sub-menu">
                                 <li class="nav-item"> <a class="nav-link" href="{{route('admin.order.orders')}}">Order list</a></li>
-                                <!-- <li class="nav-item"> <a class="nav-link" href="#">Order status</a></li> -->
+                                <!-- <li class="nav-item"> <a class="nav-link" href="admin.order.edit">Order status</a></li> -->
 
                                 <!-- <li class="nav-item"> <a class="nav-link" href="#">Add Country</a></li> -->
                                 <!-- <li class="nav-item"> <a class="nav-link" href="#">State list</a></li> -->
@@ -339,6 +342,8 @@
 
             @yield('admin-dashboard-orders')
             @yield('admin-dashboard-orders.view')
+            @yield('admin-dashboard-profile')
+            @yield('admin-dashboard-changepassword')
             <!--   @yield('admin-state-add')
             @yield('admin-state-index')
             @yield('admin-course-add')

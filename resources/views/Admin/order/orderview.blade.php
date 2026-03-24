@@ -7,7 +7,6 @@
 
         <div class="row">
 
-            <!-- Order Information -->
             <div class="col-md-6 grid-margin">
                 <div class="card">
                     <div class="card-body">
@@ -46,6 +45,11 @@
                             </tr>
 
                             <tr>
+                                <th>Order Status</th>
+                                <td>{{ ucfirst($order->order_status) }}</td>
+                            </tr>
+
+                            <tr>
                                 <th>Payment Method</th>
                                 <td>{{ strtoupper($order->payment_method) }}</td>
                             </tr>
@@ -67,7 +71,6 @@
             </div>
 
 
-            <!-- Order Products -->
             <div class="col-md-6 grid-margin">
                 <div class="card">
                     <div class="card-body">

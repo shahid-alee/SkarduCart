@@ -33,6 +33,9 @@
 .theme-footer{
     background-color: black;
     margin-top: 10px;
+     position: absolute;
+    bottom: 0;
+    width: 100%;
 
 }
 .theme-product img:hover{

@@ -12,14 +12,14 @@
     </div>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="{{ asset('assets/images/slider3.png') }}" class="d-block w-100" alt="slider 1">
+            <img src="{{ asset('assets/images/banner1.png') }}" class="d-block w-100" alt="slider 1">
         </div>
         <div class="carousel-item">
-            <img src="{{ asset('assets/images/slider2.png') }}" class="d-block w-100" alt="slider 2">
+            <img src="{{ asset('assets/images/banner2.png') }}" class="d-block w-100" alt="slider 2">
         </div>
-        <div class="carousel-item">
+        <!-- <div class="carousel-item">
             <img src="{{ asset('assets/images/slider1.png') }}" class="d-block w-100" alt="slider 3">
-        </div>
+        </div> -->
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

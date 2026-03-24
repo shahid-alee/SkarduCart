@@ -13,6 +13,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\StripeWebhookController;
+Use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\UserController;
@@ -22,6 +23,12 @@ Route::post('/account/login',[LoginController::class, 'loginUser'])->name('login
 
 Route::get('/auth/signup',[RegisterController::class, 'signupForm'])->name('signup.form');
 Route::post('/account/signup',[RegisterController::class, 'signupUser'])->name('signup.store');
+
+Route::get('/profile', [ProfileController::class, 'profile'])->name('admin-profile');
+Route::post('/profile/{id}', [ProfileController::class, 'profileUpdate'])->name('profile-update');
+// Password Change
+Route::get('change-password', [ProfileController::class, 'changePassword'])->name('change.password.form');
+Route::post('change-password', [ProfileController::class, 'changPasswordStore'])->name('change.admin.password');
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
@@ -44,7 +51,9 @@ Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('ca
 
 Route::get('/order-tracking/{id}', [CheckoutController::class, 'orderTracking'])->name('order.tracking');
 
-Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('stripe.webhook');
+// Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('stripe.webhook');
+
+Route::post('/stripe/webhook', [CheckoutController::class, 'handleWebhook']);
 
 
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout')->middleware('auth');
@@ -55,7 +64,7 @@ Route::post('/stripe-success/{order}', [CheckoutController::class,'stripeSuccess
 
 Route::get('/review/{order_id}', [ReviewController::class,'create'])->name('review.create')->middleware('auth');
 Route::post('/review/store', [ReviewController::class,'store'])->name('review.store')->middleware('auth');
-
+Route::get('/review/send/mail' , [ReviewController::class, 'sendmail' ])->name('review.send.mail');
 
 Route::middleware(['auth'])->group(function () {
 Route::get('/admin/dashboard', [DashbordController::class, 'index'])->name('admin.dashboard');

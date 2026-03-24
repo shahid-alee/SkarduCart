@@ -1,3 +1,13 @@
+<!-- <style>
+    .theme-footer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    }
+</style> -->
+
+
+
 <footer class="text-center p-3 theme-footer text-light">
     © 2026 Skardu cart .All right resverse . Design and Develop by Teckclick Solution
 </footer>
