@@ -7,6 +7,8 @@ use App\Models\User;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\File;
+use App\Rules\MatchOldPassword;
 
 class UserController extends Controller
 {
@@ -85,28 +87,75 @@ class UserController extends Controller
     }
 
 
-  public function profile()
-{
-    $user = Auth::user(); 
+    public function orders()
+    {
+        $user = Auth::user();
 
-    return view('user.profile', compact('user'));
-}
+        $orders = Order::where('user_id', $user->id)
+            ->latest()
+            ->get();
 
-public function orders()
-{
-    $user = Auth::user();
+        return view('user.ordershistory', compact('orders'));
+    }
 
-    $orders = Order::where('user_id', $user->id)
-                    ->latest()
-                    ->get();
 
-    return view('user.orders', compact('orders'));
-}
+    public function profile()
+    {
+        $user = Auth::user();
 
-public function changePassword()
-{
-    $user = Auth::user();
+        return view('user.profile', compact('user'));
+    }
 
-    return view('user.change-password', compact('user'));
-}
+
+    public function updateProfile(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+
+        if ($request->hasFile('profile_image')) {
+
+
+            if ($user->profile_image && File::exists(public_path('images/users/' . $user->profile_image))) {
+                File::delete(public_path('images/users/' . $user->profile_image));
+            }
+
+
+            $file = $request->file('profile_image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/users'), $filename);
+
+            $user->profile_image = $filename;
+        }
+
+        $user->name = $request->name;
+        $user->save();
+
+        return back()->with('success', 'Profile updated successfully.');
+    }
+
+    public function changePassword()
+    {
+        $user = Auth::user();
+
+        return view('user.change-password', compact('user'));
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => ['required', new MatchOldPassword],
+            'new_password' => [
+                'required',
+                'min:8',
+                'regex:/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*#?&]).+$/'
+            ],
+            'new_confirm_password' => ['same:new_password'],
+        ]);
+
+        User::find(Auth::id())->update([
+            'password' => Hash::make($request->new_password)
+        ]);
+
+        return back()->with('success', 'Password updated successfully.');
+    }
 }

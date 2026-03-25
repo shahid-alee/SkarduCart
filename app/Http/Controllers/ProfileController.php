@@ -11,25 +11,25 @@ use App\Rules\MatchOldPassword;
 
 class ProfileController extends Controller
 {
-    public function profile()
+    public function adminprofile()
     {
         $profile = Auth::user();
-        return view('profile.user-profile', compact('profile'));
+        return view('profile.admin-profile', compact('profile'));
     }
 
-    public function profileUpdate(Request $request, $id)
+    public function adminprofileUpdate(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-       
+
         if ($request->hasFile('profile_image')) {
 
-            
+
             if ($user->profile_image && File::exists(public_path('images/users/' . $user->profile_image))) {
                 File::delete(public_path('images/users/' . $user->profile_image));
             }
 
-           
+
             $file = $request->file('profile_image');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('images/users'), $filename);
@@ -40,14 +40,15 @@ class ProfileController extends Controller
         $user->name = $request->name;
         $user->save();
 
-return back()->with('success', 'Profile updated successfully.');    }
+        return back()->with('success', 'Profile updated successfully.');
+    }
 
-    public function changePassword()
+    public function adminchangePassword()
     {
         return view('profile.changepassword');
     }
 
-    public function changPasswordStore(Request $request)
+    public function adminchangePasswordStore(Request $request)
     {
         $request->validate([
             'current_password' => ['required', new MatchOldPassword],
@@ -63,5 +64,6 @@ return back()->with('success', 'Profile updated successfully.');    }
             'password' => Hash::make($request->new_password)
         ]);
 
-return back()->with('success', 'Password updated successfully.');    }
+        return back()->with('success', 'Password updated successfully.');
+    }
 }

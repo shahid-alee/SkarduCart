@@ -31,11 +31,11 @@
 
 }
 .theme-footer{
-    background-color: black;
-    margin-top: 10px;
-     position: absolute;
-    bottom: 0;
-    width: 100%;
+    background-color: rgb(0, 0, 0);
+     margin-top: auto;
+     position: fixed;
+     bottom: 0;
+   
 
 }
 .theme-product img:hover{

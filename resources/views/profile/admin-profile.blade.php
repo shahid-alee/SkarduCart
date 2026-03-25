@@ -26,7 +26,7 @@
                             </a>
                         </div>
                         <div class="">
-                            <h5 class="fw-semibold fs-22 mb-1">{{ ('$profile->name') }}</h5>
+                            <!-- <h5 class="fw-semibold fs-22 mb-1">{{ ('$profile->name') }}</h5> -->
                         </div> 
                         </div>
                     </div>

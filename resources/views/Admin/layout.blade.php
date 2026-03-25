@@ -185,12 +185,12 @@
                                 </p>
                             </div>
 
-                            <a href="{{route('admin-profile')}}" class="dropdown-item">
+                            <a href="{{ ('/admin/profile') }}" class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i>
                                 My Profile
                             </a>
 
-                            <a href="{{route('change.password.form')}}" class="dropdown-item">
+                            <a href="{{ ('/admin/change-password') }}" class="dropdown-item">
                                 <i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i>
                                 Change password
                             </a>
