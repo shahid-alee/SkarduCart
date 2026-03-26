@@ -87,17 +87,15 @@
 </div>
 
 <script>
+
+
+
 stripe.confirmCardPayment(clientSecret, {
-    payment_method: {
-        card: cardElement
-    }
+    payment_method: { card: cardElement }
 }).then(function(result) {
     if (result.error) {
-        // show error
-    } else {
-        if (result.paymentIntent.status === 'succeeded') {
-            window.location.href = "/order-success/" + orderId;
-        }
+    } else if (result.paymentIntent.status === 'succeeded') {
+        window.location.href = "/stripe/success/" + orderId;
     }
 });
 

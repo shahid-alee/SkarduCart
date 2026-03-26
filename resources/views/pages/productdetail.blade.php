@@ -162,8 +162,12 @@
             <div class="row mt-4">
 
                 <div class="col-lg-1">
-                    <img src="{{ asset('assets/images/reviews/user.jpg') }}"
-                        class="rounded-circle img-fluid">
+                    <img class="rounded-circle"
+                        src="{{ $review->user && $review->user->profile_image 
+        ? asset('images/users/'.$review->user->profile_image) 
+        : asset('assets/images/default-user.png') }}"
+                        alt="Profile image"
+                        style="width:50px; height:50px; object-fit:cover;">
                 </div>
 
                 <div class="col-lg-10">
@@ -171,8 +175,8 @@
                     <h5>{{ $review->user->name }}</h5>
 
                     <div class="d-flex">
-                        <div class="flex-grow-1">
-                            <h6>Date: {{ $review->created_at->format('d-m-Y') }}</h6>
+                        <div class="flex-grow-1 ">
+                            <h6 class="text-black-50" >Date: {{ $review->created_at->format('d-m-Y') }}</h6>
                         </div>
 
                         <div class="p-1">

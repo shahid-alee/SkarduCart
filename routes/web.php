@@ -40,7 +40,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/change-password', [UserController::class, 'changePassword'])->name('user.changepassword.form');
 
-    Route::post('/change-password', [UserController::class, 'updatePassword'])->name('user.password.update');
+    Route::post('/change-password/update', [UserController::class, 'updatePassword'])->name('user.password.update');
 
     Route::get('/orders', [UserController::class, 'orders'])->name('user.orders');
 });
@@ -56,7 +56,7 @@ Route::get('/category/{id}', [CategoryController::class,'detail'])->name('catego
 Route::get('/subcategory/{id}', [SubcategoryController::class,'detail'])->name('subcategory.products');
 
 
-Route::get('/cart-list', [CartController::class,'list'])->name('cart.list');
+Route::get('/cart.list', [CartController::class,'list'])->name('cart.list');
 Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add')->middleware('auth');
 
 
@@ -66,9 +66,13 @@ Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('ca
 
 Route::get('/order-tracking/{id}', [CheckoutController::class, 'orderTracking'])->name('order.tracking');
 
-// Route::post('/stripe/webhook', [StripeWebhookController::class, 'handleWebhook'])->name('stripe.webhook');
 
-Route::post('/stripe/webhook', [CheckoutController::class, 'handleWebhook']);
+// // Route::post('/stripe/webhook', [CheckoutController::class, 'handleWebhook']);
+// Route::post('/stripe/webhook', [CheckoutController::class, 'stripeWebhook']);
+
+Route::post('/stripe/webhook', [CheckoutController::class, 'stripeWebhook'])
+    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::get('/stripe/success/{orderId}', [CheckoutController::class, 'stripePaymentSuccess'])->name('stripe.success');
 
 
 Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout')->middleware('auth');
