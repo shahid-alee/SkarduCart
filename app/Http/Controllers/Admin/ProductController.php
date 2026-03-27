@@ -18,6 +18,24 @@ use Illuminate\Support\Facades\Storage;
 class ProductController extends Controller
 {
 
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        if ($product->image) {
+
+            foreach ($product->image as $img) {
+                Storage::disk('public')->delete($img);
+            }
+        }
+        $product->properties()->delete();
+        $product->delete();
+
+        return redirect()
+            ->route('admin.product.products')
+            ->with('success', 'Product deleted successfully');
+    }
+
    
 public function viewproduct($id)
     {
@@ -36,84 +54,109 @@ public function viewproduct($id)
         return view('admin.product.products', compact('products'));
     }
 
-       public function createproduct()
+    public function createproduct()
     {
         $categories = Category::all();
         $subcategories = Subcategories::all();
         return view('admin.product.addproduct', compact('categories', 'subcategories'));
     }
 
-    public function storeproduct(Request $request)
-    {
-        $request->validate([
-            'product_name' => 'required',
-            'base_price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'description' => 'required',
-            'image' => 'required',
-            'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
-            'variants' => 'nullable|array',
-            'variants.*.name' => 'nullable|string',
-            'variants.*.type' => 'nullable|string',
-            'variants.*.price_adjustment' => 'nullable|numeric',
-            'variants.*.stock' => 'nullable|integer|min:0'
-        ]);
+   public function storeproduct(Request $request)
+{
+   $request->validate([
+    'product_name' => 'required',
+    'base_price' => 'required|numeric',
+    'category_id' => 'required',
+    'subcategory_id' => 'required',
+    'description' => 'required',
+    'image' => 'required|sometimes',
+    'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
+    'variants' => 'array',
+    'variants.*.name' => 'required_if:variants.*.type,storage,generation,color',
+    'variants.*.type' => 'required',
+    'variants.*.price_adjustment' => 'nullable|numeric', // Make nullable
+    'variants.*.stock' => 'nullable|integer'
+]);
 
-        // Handle images
-        $imagePaths = [];
-        if ($request->hasFile('image')) {
-            foreach ($request->file('image') as $img) {
-                $path = $img->store('products', 'public');
-                $imagePaths[] = $path;
-            }
+    // Get category to check if generation variants should be saved
+    $category = Category::find($request->category_id);
+    
+    $imagePaths = [];
+    if ($request->hasFile('image')) {
+        foreach ($request->file('image') as $img) {
+            $path = $img->store('products', 'public');
+            $imagePaths[] = $path;
         }
+    }
 
-        // Create product
-        $product = Product::create([
-            'product_name' => $request->product_name,
-            'base_price' => $request->base_price,
-            'price' => $request->base_price,
-            'category_id' => $request->category_id,
-            'subcategory_id' => $request->subcategory_id,
-            'quantity' => 0, // Will be updated from variants
-            'description' => $request->description,
-            'image' => $imagePaths
-        ]);
-
-        $totalStock = 0;
-
-        // Save variants (only if they have name and type)
-        if ($request->has('variants') && is_array($request->variants)) {
-            foreach ($request->variants as $variant) {
-                // Only save if variant has a name and type
-                if (!empty($variant['name']) && !empty($variant['type'])) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'variant_name' => $variant['name'],
-                        'variant_type' => $variant['type'],
-                        'price_adjustment' => $variant['price_adjustment'] ?? 0,
-                        'stock_quantity' => $variant['stock'] ?? 0
-                    ]);
-                    $totalStock += $variant['stock'] ?? 0;
-                }
+    // Calculate total quantity from variants
+    $totalQuantity = 0;
+    if ($request->has('variants')) {
+        foreach ($request->variants as $variant) {
+            // Skip generation variants for non-laptop categories
+            if ($category && strtolower($category->category_name) != 'laptops' && $variant['type'] == 'generation') {
+                continue;
             }
+            
+            // Skip empty variant names
+            if (empty($variant['name'])) {
+                continue;
+            }
+            
+            $totalQuantity += intval($variant['stock'] ?? 0);
         }
+    }
 
-        // Update product total stock
-        $product->quantity = $totalStock;
-        $product->save();
+    $product = Product::create([
+        'product_name' => $request->product_name,
+        'base_price' => $request->base_price,
+        'price' => $request->base_price,
+        'category_id' => $request->category_id,
+        'subcategory_id' => $request->subcategory_id,
+        'quantity' => $totalQuantity, // Sum of all variant stocks
+        'description' => $request->description,
+        'image' => $imagePaths
+    ]);
 
-        // Save properties (if needed)
-        if ($request->properties) {
-            foreach ($request->properties as $propertyName => $values) {
-                $property = ProductProperty::create([
-                    'product_id' => $product->id,
-                    'user_id' => auth()->id(),
-                    'property_name' => $propertyName
-                ]);
+    // Save variants - filter out empty ones and invalid ones
+    if ($request->has('variants')) {
+        foreach ($request->variants as $variant) {
+            // Skip if variant name is empty
+            if (empty($variant['name'])) {
+                continue;
+            }
+            
+            // Skip generation variants for non-laptop categories
+            if ($category && strtolower($category->category_name) != 'laptops' && $variant['type'] == 'generation') {
+                continue;
+            }
+            
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'variant_name' => $variant['name'],
+                'variant_type' => $variant['type'],
+                'price_adjustment' => $variant['price_adjustment'] ?? 0,
+                'stock_quantity' => $variant['stock'] ?? 0
+            ]);
+        }
+    }
 
-                foreach ($values as $value) {
+    // Save properties only if they exist and have values
+    if ($request->has('properties') && is_array($request->properties)) {
+        foreach ($request->properties as $propertyName => $values) {
+            // Skip empty property names or empty values
+            if (empty($propertyName) || empty($values)) {
+                continue;
+            }
+            
+            $property = ProductProperty::create([
+                'product_id' => $product->id,
+                'user_id' => auth()->id(),
+                'property_name' => $propertyName
+            ]);
+
+            foreach ($values as $value) {
+                if (!empty($value)) {
                     ProductPropertyValue::create([
                         'product_property_id' => $property->id,
                         'value' => $value
@@ -121,9 +164,112 @@ public function viewproduct($id)
                 }
             }
         }
-
-        return redirect()->route('admin.product.products')->with('success', 'Product added successfully');
     }
+
+    return redirect()->back()->with('success', 'Product added successfully');
+}
+
+public function updateproduct(Request $request, $id)
+{
+    $product = Product::findOrFail($id);
+
+    $request->validate([
+    'product_name' => 'required',
+    'base_price' => 'required|numeric',
+    'category_id' => 'required',
+    'subcategory_id' => 'required',
+    'description' => 'required',
+    'image' => 'required|sometimes',
+    'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
+    'variants' => 'array',
+    'variants.*.name' => 'required_if:variants.*.type,storage,generation,color',
+    'variants.*.type' => 'required',
+    'variants.*.price_adjustment' => 'nullable|numeric', // Make nullable
+    'variants.*.stock' => 'nullable|integer'
+]);
+
+    // Get category to check if generation variants should be saved
+    $category = Category::find($request->category_id);
+    
+    // Calculate total quantity from variants
+    $totalQuantity = 0;
+    if ($request->has('variants')) {
+        foreach ($request->variants as $variant) {
+            // Skip generation variants for non-laptop categories
+            if ($category && strtolower($category->category_name) != 'laptops' && $variant['type'] == 'generation') {
+                continue;
+            }
+            
+            // Skip empty variant names
+            if (empty($variant['name'])) {
+                continue;
+            }
+            
+            $totalQuantity += intval($variant['stock'] ?? 0);
+        }
+    }
+
+    $product->update([
+        'product_name' => $request->product_name,
+        'base_price' => $request->base_price,
+        'price' => $request->base_price,
+        'category_id' => $request->category_id,
+        'subcategory_id' => $request->subcategory_id,
+        'quantity' => $totalQuantity, // Sum of all variant stocks
+        'description' => $request->description,
+    ]);
+
+    // Handle images
+    if ($request->hasFile('image')) {
+        $oldImages = $product->image;
+        if (!is_array($oldImages)) {
+            $oldImages = json_decode($oldImages, true) ?? [$oldImages];
+        }
+        foreach ($oldImages as $img) {
+            if (!empty($img) && Storage::disk('public')->exists($img)) {
+                Storage::disk('public')->delete($img);
+            }
+        }
+
+        $imagePaths = [];
+        foreach ($request->file('image') as $img) {
+            $path = $img->store('products', 'public');
+            $imagePaths[] = $path;
+        }
+        $product->image = $imagePaths;
+        $product->save();
+    }
+
+    // Update variants
+    if ($request->has('variants')) {
+        // Delete old variants
+        $product->variants()->delete();
+        
+        // Create new variants - filter out empty ones and invalid ones
+        foreach ($request->variants as $variant) {
+            // Skip if variant name is empty
+            if (empty($variant['name'])) {
+                continue;
+            }
+            
+            // Skip generation variants for non-laptop categories
+            if ($category && strtolower($category->category_name) != 'laptops' && $variant['type'] == 'generation') {
+                continue;
+            }
+            
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'variant_name' => $variant['name'],
+                'variant_type' => $variant['type'],
+                'price_adjustment' => $variant['price_adjustment'] ?? 0,
+                'stock_quantity' => $variant['stock'] ?? 0
+            ]);
+        }
+    }
+
+    return redirect()->route('admin.product.products')
+        ->with('success', 'Product updated successfully');
+}
 
     public function editproduct($id)
     {
@@ -141,111 +287,6 @@ public function viewproduct($id)
         return view('admin.product.addproduct', compact('product', 'categories', 'subcategories', 'variantsByType'));
     }
 
-    public function updateproduct(Request $request, $id)
-    {
-        $product = Product::findOrFail($id);
-
-        $request->validate([
-            'product_name' => 'required',
-            'base_price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'description' => 'required',
-            'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
-            'variants' => 'nullable|array',
-            'variants.*.name' => 'nullable|string',
-            'variants.*.type' => 'nullable|string',
-            'variants.*.price_adjustment' => 'nullable|numeric',
-            'variants.*.stock' => 'nullable|integer|min:0'
-        ]);
-
-        $product->update([
-            'product_name' => $request->product_name,
-            'base_price' => $request->base_price,
-            'price' => $request->base_price,
-            'category_id' => $request->category_id,
-            'subcategory_id' => $request->subcategory_id,
-            'description' => $request->description,
-        ]);
-
-        // Handle images
-        if ($request->hasFile('image')) {
-            // Delete old images
-            $oldImages = $product->image;
-            if (!is_array($oldImages)) {
-                $oldImages = json_decode($oldImages, true) ?? [$oldImages];
-            }
-            foreach ($oldImages as $img) {
-                if (!empty($img) && Storage::disk('public')->exists($img)) {
-                    Storage::disk('public')->delete($img);
-                }
-            }
-
-            // Upload new images
-            $imagePaths = [];
-            foreach ($request->file('image') as $img) {
-                $path = $img->store('products', 'public');
-                $imagePaths[] = $path;
-            }
-            $product->image = $imagePaths;
-            $product->save();
-        }
-
-        $totalStock = 0;
-
-        // Update variants
-        if ($request->has('variants') && is_array($request->variants)) {
-            // Delete old variants
-            $product->variants()->delete();
-            
-            // Create new variants (only those with name and type)
-            foreach ($request->variants as $variant) {
-                // Only save if variant has a name and type
-                if (!empty($variant['name']) && !empty($variant['type'])) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'variant_name' => $variant['name'],
-                        'variant_type' => $variant['type'],
-                        'price_adjustment' => $variant['price_adjustment'] ?? 0,
-                        'stock_quantity' => $variant['stock'] ?? 0
-                    ]);
-                    $totalStock += $variant['stock'] ?? 0;
-                }
-            }
-        }
-
-        // Update product total stock
-        $product->quantity = $totalStock;
-        $product->save();
-
-        return redirect()->route('admin.product.products')
-            ->with('success', 'Product updated successfully');
-    }
-
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        
-        // Delete product images
-        if ($product->image) {
-            foreach ($product->image as $img) {
-                Storage::disk('public')->delete($img);
-            }
-        }
-        
-        // Delete variants (will cascade if foreign key constraint is set)
-        $product->variants()->delete();
-        
-        // Delete properties
-        $product->properties()->delete();
-        
-        // Delete product
-        $product->delete();
-
-        return redirect()
-            ->route('admin.product.products')
-            ->with('success', 'Product deleted successfully');
-    }
 
 }
 

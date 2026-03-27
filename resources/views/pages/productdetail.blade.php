@@ -58,6 +58,18 @@
         background-color: #28a745;
         color: #fff;
     }
+    
+    .variant-group {
+        border-left: 3px solid #ff6600;
+        padding-left: 15px;
+    }
+    
+    .selected-variant-summary {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 15px;
+    }
 </style>
 
 <div class="container-fluid bg-light p-5">
@@ -99,7 +111,6 @@
                     <h3 class="text-success" id="display-price">
                         Rs {{ number_format($product->base_price, 2) }}
                     </h3>
-                    <small class="text-muted">Inclusive of all taxes</small>
                 </div>
 
                 <!-- Rating Display -->
@@ -127,39 +138,39 @@
                 </div>
 
                 <!-- Product Variants Section -->
-                @if($product->variants && $product->variants->count() > 0)
-                    @php
-                        $groupedVariants = $product->variants->groupBy('variant_type');
-                        // Get category name (convert to lowercase for comparison)
-                        $categoryName = strtolower($product->category->category_name ?? '');
-                    @endphp
+                @php
+                    $groupedVariants = $product->variants->groupBy('variant_type');
+                    $categoryName = strtolower($product->category->category_name ?? '');
+                    $selectedVariants = [];
+                @endphp
+                
+                <form action="{{ route('cart.add.combined') }}" method="POST" id="add-to-cart-form">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                     
                     @foreach($groupedVariants as $type => $variants)
-                        <!-- Skip generation variants for mobile category -->
                         @if($type == 'generation' && $categoryName == 'mobiles')
                             @continue
                         @endif
                         
-                        <!-- Skip storage variants for laptops? (optional - you can customize) -->
-                        {{-- @if($type == 'storage' && $categoryName == 'laptops')
-                            @continue
-                        @endif --}}
-                        
-                        <div class="mb-4">
+                        <div class="mb-4 variant-group">
                             <h5 class="mb-3">{{ ucfirst($type) }} Options:</h5>
-                            <div class="row g-3">
+                            <div class="row g-3" data-variant-type="{{ $type }}">
                                 @foreach($variants as $variant)
                                 <div class="col-md-4 col-sm-6">
                                     <div class="variant-option p-3" 
+                                         data-variant-type="{{ $type }}"
                                          data-variant-id="{{ $variant->id }}"
                                          data-variant-name="{{ $variant->variant_name }}"
-                                         data-price="{{ $product->base_price + $variant->price_adjustment }}"
+                                         data-price-adjustment="{{ $variant->price_adjustment }}"
                                          data-stock="{{ $variant->stock_quantity }}">
                                         <div class="text-center">
                                             <strong class="d-block mb-2">{{ $variant->variant_name }}</strong>
-                                            <div class="text-success fw-bold mb-1">
-                                                Rs {{ number_format($product->base_price + $variant->price_adjustment, 2) }}
-                                            </div>
+                                            @if($type == 'storage')
+                                                <div class="text-success fw-bold mb-1">
+                                                    + Rs {{ number_format($variant->price_adjustment, 2) }}
+                                                </div>
+                                            @endif
                                             @if($variant->stock_quantity > 10)
                                                 <span class="stock-badge stock-in">In Stock</span>
                                             @elseif($variant->stock_quantity > 0)
@@ -172,37 +183,23 @@
                                 </div>
                                 @endforeach
                             </div>
+                            <input type="hidden" name="variants[{{ $type }}]" id="selected-{{ $type }}" value="">
                         </div>
                     @endforeach
-                @endif
-
-                <!-- Original Properties (if any) -->
-                @if($product->properties && $product->properties->count() > 0)
-                    @foreach($product->properties as $property)
-                    <div class="mb-3">
-                        <strong>{{ ucfirst($property->property_name) }} :</strong>
-                        <div class="mt-2">
-                            @foreach($property->values as $value)
-                            <label class="me-3">
-                                <input type="radio"
-                                    name="property[{{ $property->id }}]"
-                                    value="{{ $value->id }}"
-                                    required>
-                                {{ $value->value }}
-                            </label>
-                            @endforeach
+                    
+                    <!-- Selected Variants Summary -->
+                    <div class="selected-variant-summary" id="selected-summary" style="display: none;">
+                        <h6>Selected Options:</h6>
+                        <div id="selected-options-list"></div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <strong>Total Price:</strong>
+                            <strong class="text-success" id="total-price">Rs {{ number_format($product->base_price, 2) }}</strong>
                         </div>
                     </div>
-                    @endforeach
-                @endif
-
-                <!-- Add to Cart Form -->
-                <form action="{{ route('cart.add', $product->id) }}" method="POST" id="add-to-cart-form">
-                    @csrf
-                    <input type="hidden" name="variant_id" id="selected-variant-id" value="">
                     
                     <!-- Quantity Selector -->
-                    <div class="d-flex align-items-center mb-4">
+                    <div class="d-flex align-items-center mb-4 mt-4">
                         <div class="me-3 fw-bold">Quantity :</div>
                         <div class="input-group" style="width: 130px;">
                             <button type="button" class="btn btn-outline-secondary" onclick="decreaseQty()">-</button>
@@ -226,9 +223,9 @@
                         </button>
                         
                         @auth
-                        <a href="{{ route('checkout', $product->id) }}" class="btn theme-orange-btn text-light rounded-pill px-4">
+                        <button type="button" onclick="buyNow()" class="btn theme-orange-btn text-light rounded-pill px-4">
                             <i class="fas fa-bolt me-2"></i> Buy Now
-                        </a>
+                        </button>
                         @endauth
                         
                         @guest
@@ -264,7 +261,7 @@
                             <div id="specifications" class="accordion-collapse collapse">
                                 <div class="accordion-body">
                                     <table class="table table-bordered">
-                                         <tr>
+                                        <tr>
                                             <th>Product Name</th>
                                             <td>{{ $product->product_name }}</td>
                                         </tr>
@@ -282,8 +279,6 @@
                                             <td>
                                                 @foreach($product->variants->groupBy('variant_type') as $type => $variants)
                                                     @php
-                                                        $categoryName = strtolower($product->category->category_name ?? '');
-                                                        // Skip generation for mobiles in specifications as well
                                                         if($type == 'generation' && $categoryName == 'mobiles') {
                                                             continue;
                                                         }
@@ -305,94 +300,21 @@
     </div>
 </section>
 
-<!-- Related Products Section -->
-@if(isset($products) && $products->count() > 0)
-<section class="my-5">
-    <div class="container">
-        <h3 class="mb-4">Related Products</h3>
-        <div class="row">
-            @foreach($products as $relatedProduct)
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="{{ asset('storage/'.$relatedProduct->image[0]) }}" 
-                         class="card-img-top" 
-                         alt="{{ $relatedProduct->product_name }}"
-                         style="height: 200px; object-fit: cover;">
-                    <div class="card-body text-center">
-                        <h6 class="card-title">{{ $relatedProduct->product_name }}</h6>
-                        <p class="text-success fw-bold">Rs {{ number_format($relatedProduct->base_price, 2) }}</p>
-                        <a href="{{ route('product.show', $relatedProduct->id) }}" class="btn btn-sm theme-green-btn text-light">
-                            View Details
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
-<!-- Reviews Section -->
-<section class="my-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <h3 class="mb-4">Customer Reviews ({{ $product->reviews->count() }})</h3>
-                
-                @forelse($product->reviews as $review)
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="d-flex align-items-center">
-                                <img class="rounded-circle me-3"
-                                    src="{{ $review->user && $review->user->profile_image 
-                                        ? asset('images/users/'.$review->user->profile_image) 
-                                        : asset('assets/images/default-user.png') }}"
-                                    alt="Profile image"
-                                    style="width: 50px; height: 50px; object-fit: cover;">
-                                <div>
-                                    <h5 class="mb-1">{{ $review->user->name ?? 'Anonymous' }}</h5>
-                                    <small class="text-muted">{{ $review->created_at->format('d-m-Y') }}</small>
-                                </div>
-                            </div>
-                            <div class="rating">
-                                @for($i = 1; $i <= 5; $i++)
-                                    @if($i <= $review->rating)
-                                        <span class="fa fa-star text-warning"></span>
-                                    @else
-                                        <span class="fa fa-star text-secondary"></span>
-                                    @endif
-                                @endfor
-                            </div>
-                        </div>
-                        <p class="card-text mt-3">{{ $review->review }}</p>
-                    </div>
-                </div>
-                @empty
-                <div class="text-center py-5">
-                    <i class="fas fa-star fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">No reviews yet. Be the first to review this product!</p>
-                </div>
-                @endforelse
-            </div>
-        </div>
-    </div>
-</section>
-
 <script>
-    // Image changer function
+    let selectedVariants = {};
+    let basePrice = {{ $product->base_price }};
+    
     function changeImage(element) {
         document.getElementById("mainImage").src = element.src;
     }
     
-    // Quantity functions
     function increaseQty() {
         let qty = document.getElementById('quantity');
-        let maxQty = parseInt(qty.max);
         let currentQty = parseInt(qty.value);
+        let maxQty = parseInt(qty.max);
         if (currentQty < maxQty) {
             qty.value = currentQty + 1;
+            updateStockMessage();
         }
     }
 
@@ -400,126 +322,234 @@
         let qty = document.getElementById('quantity');
         if (qty.value > 1) {
             qty.value = parseInt(qty.value) - 1;
+            updateStockMessage();
         }
     }
     
-    // Variant selection handling
-    let selectedVariant = null;
+    function updateStockMessage() {
+        // Find minimum stock among selected variants
+        let minStock = Infinity;
+        let allSelected = true;
+        
+        // Get all variant groups that have variants
+        document.querySelectorAll('.variant-group').forEach(group => {
+            const variantOptions = group.querySelectorAll('.variant-option');
+            
+            // Only require selection if there are variants in this group
+            if (variantOptions.length > 0) {
+                const type = group.querySelector('.row').getAttribute('data-variant-type');
+                if (selectedVariants[type]) {
+                    const stock = selectedVariants[type].stock;
+                    if (stock < minStock) minStock = stock;
+                } else {
+                    allSelected = false;
+                }
+            }
+        });
+        
+        const quantity = parseInt(document.getElementById('quantity').value);
+        const stockMessage = document.getElementById('stock-message');
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        
+        if (!allSelected) {
+            stockMessage.innerHTML = '<i class="fas fa-info-circle text-info"></i> Please select all options';
+            stockMessage.className = 'ms-3 text-info small';
+            addToCartBtn.disabled = true;
+            addToCartBtn.style.opacity = '0.6';
+            addToCartBtn.style.cursor = 'not-allowed';
+            return;
+        }
+        
+        if (minStock === Infinity) {
+            stockMessage.innerHTML = '';
+            addToCartBtn.disabled = false;
+            addToCartBtn.style.opacity = '1';
+            addToCartBtn.style.cursor = 'pointer';
+            return;
+        }
+        
+        if (quantity > minStock) {
+            stockMessage.innerHTML = `<i class="fas fa-exclamation-circle text-danger"></i> Only ${minStock} items available`;
+            stockMessage.className = 'ms-3 text-danger small';
+            addToCartBtn.disabled = true;
+        } else if (minStock > 10) {
+            stockMessage.innerHTML = '<i class="fas fa-check-circle text-success"></i> In Stock';
+            stockMessage.className = 'ms-3 text-success small';
+            addToCartBtn.disabled = false;
+        } else if (minStock > 0) {
+            stockMessage.innerHTML = `<i class="fas fa-exclamation-circle text-warning"></i> Only ${minStock} left in stock`;
+            stockMessage.className = 'ms-3 text-warning small';
+            addToCartBtn.disabled = false;
+        } else {
+            stockMessage.innerHTML = '<i class="fas fa-times-circle text-danger"></i> Out of Stock';
+            stockMessage.className = 'ms-3 text-danger small';
+            addToCartBtn.disabled = true;
+        }
+        
+        addToCartBtn.style.opacity = addToCartBtn.disabled ? '0.6' : '1';
+        addToCartBtn.style.cursor = addToCartBtn.disabled ? 'not-allowed' : 'pointer';
+        
+        // Update quantity max based on stock
+        if (minStock !== Infinity) {
+            document.getElementById('quantity').max = minStock;
+            if (quantity > minStock) {
+                document.getElementById('quantity').value = minStock;
+            }
+        }
+    }
     
+    function updatePriceAndSummary() {
+        let totalPrice = basePrice;
+        let summaryHtml = '';
+        
+        for (let type in selectedVariants) {
+            const variant = selectedVariants[type];
+            totalPrice += variant.priceAdjustment;
+            summaryHtml += `<div><strong>${type.charAt(0).toUpperCase() + type.slice(1)}:</strong> ${variant.name}</div>`;
+        }
+        
+        document.getElementById('total-price').innerHTML = `Rs ${totalPrice.toFixed(2)}`;
+        document.getElementById('display-price').innerHTML = `Rs ${totalPrice.toFixed(2)}`;
+        document.getElementById('selected-options-list').innerHTML = summaryHtml;
+        
+        const summaryDiv = document.getElementById('selected-summary');
+        if (Object.keys(selectedVariants).length > 0) {
+            summaryDiv.style.display = 'block';
+        } else {
+            summaryDiv.style.display = 'none';
+        }
+        
+        updateStockMessage();
+    }
+    
+    // Variant selection handling
     document.querySelectorAll('.variant-option').forEach(option => {
         option.addEventListener('click', function() {
-            // Remove selected class from all options
-            document.querySelectorAll('.variant-option').forEach(opt => {
+            const variantType = this.dataset.variantType;
+            const variantId = this.dataset.variantId;
+            const variantName = this.dataset.variantName;
+            const priceAdjustment = parseFloat(this.dataset.priceAdjustment);
+            const stock = parseInt(this.dataset.stock);
+            
+            // Check if out of stock
+            if (stock <= 0) {
+                alert('This option is out of stock!');
+                return;
+            }
+            
+            // Remove selected class from same type variants
+            document.querySelectorAll(`.variant-option[data-variant-type="${variantType}"]`).forEach(opt => {
                 opt.classList.remove('selected');
             });
             
             // Add selected class to clicked option
             this.classList.add('selected');
             
-            // Get variant data
-            const variantId = this.dataset.variantId;
-            const variantPrice = parseFloat(this.dataset.price);
-            const variantStock = parseInt(this.dataset.stock);
-            const variantName = this.dataset.variantName;
-            
             // Store selected variant
-            selectedVariant = {
+            selectedVariants[variantType] = {
                 id: variantId,
-                price: variantPrice,
-                stock: variantStock,
-                name: variantName
+                name: variantName,
+                priceAdjustment: priceAdjustment,
+                stock: stock
             };
             
             // Update hidden input
-            document.getElementById('selected-variant-id').value = variantId;
-            
-            // Update price display with animation
-            const priceElement = document.getElementById('display-price');
-            priceElement.style.opacity = '0';
-            setTimeout(() => {
-                priceElement.innerHTML = `Rs ${variantPrice.toFixed(2)}`;
-                priceElement.style.opacity = '1';
-            }, 150);
-            
-            // Update quantity max based on stock
-            const quantityInput = document.getElementById('quantity');
-            quantityInput.max = variantStock;
-            quantityInput.value = 1;
-            
-            // Update stock message
-            const stockMessage = document.getElementById('stock-message');
-            if (variantStock > 10) {
-                stockMessage.innerHTML = '<i class="fas fa-check-circle text-success"></i> In Stock';
-                stockMessage.className = 'ms-3 text-success small';
-            } else if (variantStock > 0) {
-                stockMessage.innerHTML = `<i class="fas fa-exclamation-circle text-warning"></i> Only ${variantStock} left in stock`;
-                stockMessage.className = 'ms-3 text-warning small';
-            } else {
-                stockMessage.innerHTML = '<i class="fas fa-times-circle text-danger"></i> Out of Stock';
-                stockMessage.className = 'ms-3 text-danger small';
-                document.getElementById('add-to-cart-btn').disabled = true;
-                return;
+            const hiddenInput = document.getElementById(`selected-${variantType}`);
+            if (hiddenInput) {
+                hiddenInput.value = variantId;
             }
             
-            // Enable add to cart button
-            document.getElementById('add-to-cart-btn').disabled = false;
+            // Update price and summary
+            updatePriceAndSummary();
         });
     });
     
-    // If no variant is selected, disable add to cart button (if variants exist)
-    @if($product->variants && $product->variants->count() > 0)
-        // Initially disable add to cart until variant is selected
-        document.getElementById('add-to-cart-btn').disabled = true;
-        document.getElementById('add-to-cart-btn').style.opacity = '0.6';
-        document.getElementById('add-to-cart-btn').style.cursor = 'not-allowed';
+    function buyNow() {
+        const form = document.getElementById('add-to-cart-form');
         
-        // Enable when variant is selected
-        document.querySelectorAll('.variant-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.getElementById('add-to-cart-btn').disabled = false;
-                document.getElementById('add-to-cart-btn').style.opacity = '1';
-                document.getElementById('add-to-cart-btn').style.cursor = 'pointer';
-            });
-        });
-    @endif
-    
-    // Prevent form submission if variant is required but not selected
-    document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
-        @if($product->variants && $product->variants->count() > 0)
-            const variantId = document.getElementById('selected-variant-id').value;
-            if (!variantId) {
-                e.preventDefault();
-                alert('Please select a product variant before adding to cart.');
-                return false;
+        // Check if all required variants are selected
+        const variantGroups = document.querySelectorAll('.variant-group');
+        let allSelected = true;
+        
+        variantGroups.forEach(group => {
+            const variantOptions = group.querySelectorAll('.variant-option');
+            if (variantOptions.length > 0) {
+                const type = group.querySelector('.row').getAttribute('data-variant-type');
+                if (!selectedVariants[type]) {
+                    allSelected = false;
+                    alert(`Please select a ${type} option`);
+                    return false;
+                }
             }
-        @endif
+        });
         
-        // Check stock before submission
-        if (selectedVariant) {
-            const quantity = parseInt(document.getElementById('quantity').value);
-            if (quantity > selectedVariant.stock) {
-                e.preventDefault();
-                alert(`Only ${selectedVariant.stock} items available in stock.`);
-                return false;
+        if (!allSelected) {
+            return;
+        }
+        
+        const originalAction = form.action;
+        form.action = "{{ route('cart.buynow') }}";
+        form.submit();
+        form.action = originalAction;
+    }
+    
+    // Form submission handler
+    document.getElementById('add-to-cart-form').addEventListener('submit', function(e) {
+        const variantGroups = document.querySelectorAll('.variant-group');
+        let allSelected = true;
+        
+        variantGroups.forEach(group => {
+            const variantOptions = group.querySelectorAll('.variant-option');
+            // Only require selection if there are variants in this group
+            if (variantOptions.length > 0) {
+                const type = group.querySelector('.row').getAttribute('data-variant-type');
+                if (!selectedVariants[type]) {
+                    allSelected = false;
+                    alert(`Please select a ${type} option`);
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+        
+        if (!allSelected) {
+            e.preventDefault();
+            return false;
+        }
+        
+        // Check stock
+        const quantity = parseInt(document.getElementById('quantity').value);
+        let minStock = Infinity;
+        
+        for (let type in selectedVariants) {
+            if (selectedVariants[type].stock < minStock) {
+                minStock = selectedVariants[type].stock;
             }
         }
+        
+        if (minStock !== Infinity && quantity > minStock) {
+            e.preventDefault();
+            alert(`Only ${minStock} items available in stock.`);
+            return false;
+        }
+    });
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Set max quantity based on first variant if exists
+        const firstVariant = document.querySelector('.variant-option');
+        if (firstVariant && firstVariant.dataset.stock) {
+            document.getElementById('quantity').max = firstVariant.dataset.stock;
+        }
+        
+        // If there's only one variant per type, auto-select it
+        document.querySelectorAll('.variant-group').forEach(group => {
+            const variantOptions = group.querySelectorAll('.variant-option');
+            if (variantOptions.length === 1 && variantOptions[0].dataset.stock > 0) {
+                variantOptions[0].click();
+            }
+        });
     });
 </script>
-
-<!-- Add this to handle price transition animation -->
-<style>
-    #display-price {
-        transition: opacity 0.15s ease-in-out;
-    }
-    
-    .variant-option {
-        transition: all 0.2s ease;
-    }
-    
-    .variant-option.selected {
-        border: 2px solid #ff6600;
-        background: linear-gradient(135deg, #fff8f0 0%, #fff 100%);
-    }
-</style>
 
 @endsection

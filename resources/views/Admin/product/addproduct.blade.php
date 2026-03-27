@@ -209,6 +209,58 @@
                                 </div>
                             </div>
 
+                            <!-- Color Variants -->
+<div id="color-section" class="card mb-3">
+    <div class="card-header">
+        <h5>Color Options</h5>
+    </div>
+    <div class="card-body">
+        <div id="color-variants-container">
+            @php
+                $colorVariants = isset($variantsByType['color']) ? $variantsByType['color'] : collect();
+            @endphp
+            
+            @if($colorVariants->count() > 0)
+                @foreach($colorVariants as $variant)
+                <div class="row mb-2 color-variant" data-variant-index="{{ $variantIndex }}">
+                    <div class="col-md-5">
+                        <input type="text" name="variants[{{ $variantIndex }}][name]" 
+                            class="form-control" placeholder="Color (e.g., Black, Silver)" 
+                            value="{{ $variant->variant_name }}" required>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="number" name="variants[{{ $variantIndex }}][stock]" 
+                            class="form-control" placeholder="Stock" 
+                            value="{{ $variant->stock_quantity }}">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="hidden" name="variants[{{ $variantIndex }}][type]" value="color">
+                        <input type="hidden" name="variants[{{ $variantIndex }}][price_adjustment]" value="0">
+                        <button type="button" class="btn btn-danger btn-sm remove-variant">Remove</button>
+                    </div>
+                </div>
+                @php $variantIndex++; @endphp
+                @endforeach
+            @else
+                <div class="row mb-2 color-variant" data-variant-index="{{ $variantIndex }}">
+                    <div class="col-md-5">
+                        <input type="text" name="variants[{{ $variantIndex }}][name]" class="form-control" placeholder="Color (e.g., Black, Silver)">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="number" name="variants[{{ $variantIndex }}][stock]" class="form-control" placeholder="Stock">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="hidden" name="variants[{{ $variantIndex }}][type]" value="color">
+                        <input type="hidden" name="variants[{{ $variantIndex }}][price_adjustment]" value="0">
+                        <button type="button" class="btn btn-danger btn-sm remove-variant">Remove</button>
+                    </div>
+                </div>
+            @endif
+        </div>
+        <button type="button" class="btn btn-sm btn-primary mt-2" onclick="addVariant('color')">Add Color Option</button>
+    </div>
+</div>
+
                             <button type="submit" class="btn btn-primary">Save Product</button>
                         </form>
                     </div>
@@ -226,32 +278,61 @@
         const container = document.getElementById(`${type}-variants-container`);
         const currentIndex = nextVariantIndex++;
         
-        const variantHtml = `
-            <div class="row mb-2 ${type}-variant" data-variant-index="${currentIndex}">
-                <div class="col-md-4">
-                    <input type="text" name="variants[${currentIndex}][name]" 
-                        class="form-control" 
-                        placeholder="${type === 'storage' ? 'Storage (e.g., 128GB)' : 'Generation (e.g., i5 11th Gen)'}" 
-                        required>
+        let variantHtml = '';
+        
+        if (type === 'storage') {
+            variantHtml = `
+                <div class="row mb-2 ${type}-variant" data-variant-index="${currentIndex}" data-variant-type="${type}">
+                    <div class="col-md-4">
+                        <input type="text" name="variants[${currentIndex}][name]" 
+                            class="form-control variant-name" 
+                            placeholder="Storage (e.g., 128GB)" required>
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" step="0.01" 
+                            name="variants[${currentIndex}][price_adjustment]" 
+                            class="form-control variant-price" 
+                            placeholder="Price (+Rs)"
+                            value="0">
+                    </div>
+                    <div class="col-md-3">
+                        <input type="number" 
+                            name="variants[${currentIndex}][stock]" 
+                            class="form-control variant-stock" 
+                            placeholder="Stock"
+                            value="0">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="hidden" name="variants[${currentIndex}][type]" value="${type}">
+                        <button type="button" class="btn btn-danger btn-sm remove-variant">Remove</button>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <input type="number" step="0.01" 
-                        name="variants[${currentIndex}][price_adjustment]" 
-                        class="form-control" 
-                        placeholder="Price (+Rs)">
+            `;
+        } else {
+            // For generation and color variants - no price adjustment field
+            variantHtml = `
+                <div class="row mb-2 ${type}-variant" data-variant-index="${currentIndex}" data-variant-type="${type}">
+                    <div class="col-md-5">
+                        <input type="text" name="variants[${currentIndex}][name]" 
+                            class="form-control variant-name" 
+                            placeholder="${type === 'generation' ? 'Generation (e.g., i5 11th Gen)' : 'Color (e.g., Black, Silver)'}" 
+                            required>
+                    </div>
+                    <div class="col-md-5">
+                        <input type="number" 
+                            name="variants[${currentIndex}][stock]" 
+                            class="form-control variant-stock" 
+                            placeholder="Stock"
+                            value="0">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="hidden" name="variants[${currentIndex}][type]" value="${type}">
+                        <input type="hidden" name="variants[${currentIndex}][price_adjustment]" value="0">
+                        <button type="button" class="btn btn-danger btn-sm remove-variant">Remove</button>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <input type="number" 
-                        name="variants[${currentIndex}][stock]" 
-                        class="form-control" 
-                        placeholder="Stock">
-                </div>
-                <div class="col-md-2">
-                    <input type="hidden" name="variants[${currentIndex}][type]" value="${type}">
-                    <button type="button" class="btn btn-danger btn-sm remove-variant">Remove</button>
-                </div>
-            </div>
-        `;
+            `;
+        }
         
         container.insertAdjacentHTML('beforeend', variantHtml);
         
@@ -260,19 +341,96 @@
         const removeBtn = newRow.querySelector('.remove-variant');
         removeBtn.addEventListener('click', function() {
             this.closest('.row').remove();
-            // Optional: reindex after removal
             reindexVariants();
+        });
+        
+        // Apply current visibility state
+        updateVariantVisibility();
+    }
+    
+    // Function to update variant visibility based on category
+    function updateVariantVisibility() {
+        const categorySelect = document.getElementById('category_id');
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        const categoryName = selectedOption.getAttribute('data-category-name') || '';
+        const isLaptop = categoryName.toLowerCase() === 'laptops';
+        
+        // Get all generation variants
+        const generationVariants = document.querySelectorAll('.generation-variant');
+        
+        if (!isLaptop) {
+            // Disable and mark as not required for non-laptop categories
+            generationVariants.forEach(variant => {
+                const inputs = variant.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.disabled = true;
+                    input.removeAttribute('required');
+                });
+            });
+        } else {
+            // Enable for laptop categories
+            generationVariants.forEach(variant => {
+                const inputs = variant.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+            });
+        }
+    }
+    
+    // Function to remove disabled variants from form submission
+    function prepareFormForSubmission() {
+        const categorySelect = document.getElementById('category_id');
+        const selectedOption = categorySelect.options[categorySelect.selectedIndex];
+        const categoryName = selectedOption.getAttribute('data-category-name') || '';
+        const isLaptop = categoryName.toLowerCase() === 'laptops';
+        
+        // Get all generation variants
+        const generationVariants = document.querySelectorAll('.generation-variant');
+        
+        if (!isLaptop) {
+            // Remove all generation variants for non-laptop categories
+            generationVariants.forEach(variant => {
+                variant.remove();
+            });
+            reindexVariants();
+        } else {
+            // Validate generation variants for laptop categories
+            generationVariants.forEach(variant => {
+                const nameInput = variant.querySelector('.variant-name');
+                const stockInput = variant.querySelector('.variant-stock');
+                
+                // Set default values if empty
+                if (nameInput && nameInput.value.trim() === '') {
+                    nameInput.value = 'Default Generation';
+                }
+                if (stockInput && stockInput.value === '') {
+                    stockInput.value = 0;
+                }
+            });
+        }
+        
+        // Handle color variants - ensure they have hidden price adjustment
+        const colorVariants = document.querySelectorAll('.color-variant');
+        colorVariants.forEach(variant => {
+            const nameInput = variant.querySelector('.variant-name');
+            const stockInput = variant.querySelector('.variant-stock');
+            
+            if (nameInput && nameInput.value.trim() === '') {
+                nameInput.value = 'Default Color';
+            }
+            if (stockInput && stockInput.value === '') {
+                stockInput.value = 0;
+            }
         });
     }
     
     // Function to reindex all variants to maintain sequential indices
     function reindexVariants() {
-        const allVariants = document.querySelectorAll('.storage-variant, .generation-variant');
+        const allVariants = document.querySelectorAll('.storage-variant, .generation-variant, .color-variant');
         let newIndex = 0;
         
         allVariants.forEach(variant => {
-            const oldIndex = variant.getAttribute('data-variant-index');
-            
             // Update all input names in this variant
             variant.querySelectorAll('input, input[type="hidden"]').forEach(input => {
                 const name = input.getAttribute('name');
@@ -298,17 +456,27 @@
         });
     });
     
-    // Category change handler - Show/Hide generation section
+    // Category change handler - Show/Hide generation section and update visibility
     document.getElementById('category_id').addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         const categoryName = selectedOption.getAttribute('data-category-name') || '';
         const generationSection = document.getElementById('generation-section');
+        const colorSection = document.getElementById('color-section');
+        const isLaptop = categoryName.toLowerCase() === 'laptops';
         
-        if (categoryName.toLowerCase() === 'laptops') {
+        if (isLaptop) {
             generationSection.style.display = 'block';
         } else {
             generationSection.style.display = 'none';
         }
+        
+        // Color section is always visible
+        if (colorSection) {
+            colorSection.style.display = 'block';
+        }
+        
+        // Update variant visibility (enable/disable inputs)
+        updateVariantVisibility();
     });
     
     // Trigger change on page load to set initial state
@@ -323,30 +491,35 @@
         reindexVariants();
     });
     
-    // Validate form before submission
+    // Form submission handler
     document.getElementById('product-form').addEventListener('submit', function(e) {
-        // Optional: Add custom validation here
-        const variants = document.querySelectorAll('.storage-variant, .generation-variant');
+        // Prepare form by removing disabled variants or setting defaults
+        prepareFormForSubmission();
         
-        variants.forEach(variant => {
-            const nameInput = variant.querySelector('input[name*="[name]"]');
-            const priceInput = variant.querySelector('input[name*="[price_adjustment]"]');
-            const stockInput = variant.querySelector('input[name*="[stock]"]');
+        // Auto-set default values for storage variants
+        const storageVariants = document.querySelectorAll('.storage-variant');
+        storageVariants.forEach(variant => {
+            const nameInput = variant.querySelector('.variant-name');
+            const priceInput = variant.querySelector('.variant-price');
+            const stockInput = variant.querySelector('.variant-stock');
             
-            // Auto-set default values if empty
             if (nameInput && nameInput.value.trim() === '') {
-                nameInput.value = 'Default';
+                nameInput.value = 'Default Storage';
             }
-            
             if (priceInput && priceInput.value === '') {
                 priceInput.value = 0;
             }
-            
             if (stockInput && stockInput.value === '') {
                 stockInput.value = 0;
             }
         });
+        
+        // Reindex after any modifications
+        reindexVariants();
     });
+    
+    // Initialize visibility on page load
+    updateVariantVisibility();
 </script>
 
 @endsection

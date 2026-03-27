@@ -62,13 +62,4 @@ class Product extends Model
     {
         return $this->variants()->where('variant_type', $type)->get();
     }
-
-    // Calculate total stock from all variants
-    public function getTotalStockAttribute()
-    {
-        if ($this->variants && $this->variants->count() > 0) {
-            return $this->variants->sum('stock_quantity');
-        }
-        return $this->quantity;
-    }
 }

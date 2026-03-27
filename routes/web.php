@@ -56,12 +56,23 @@ Route::get('/category/{id}', [CategoryController::class,'detail'])->name('catego
 Route::get('/subcategory/{id}', [SubcategoryController::class,'detail'])->name('subcategory.products');
 
 
-Route::get('/cart.list', [CartController::class,'list'])->name('cart.list');
-Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add')->middleware('auth');
+// Route::get('/cart.list', [CartController::class,'list'])->name('cart.list');
+// Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add')->middleware('auth');
 
 
-Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.update');
-Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
+// Route::post('/cart-update/{id}', [CartController::class,'update'])->name('cart.update');
+// Route::get('/remove-from-cart/{id}', [CartController::class,'remove'])->name('cart.remove');
+
+
+// Cart routes
+Route::post('/cart/add-combined', [CartController::class, 'addCombined'])->name('cart.add.combined');
+Route::post('/cart/buynow', [CartController::class, 'buyNow'])->name('cart.buynow');
+Route::get('/cart', [CartController::class, 'cartList'])->name('cart.list');
+Route::put('/cart/update/{id}', [CartController::class, 'updateCart'])->name('cart.update');
+Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart'])->name('cart.remove');
+Route::delete('/cart/clear', [CartController::class, 'clearCart'])->name('cart.clear');
+Route::get('/cart/count', [CartController::class, 'cartCount'])->name('cart.count');
+Route::get('/cart/details', [CartController::class, 'cartDetails'])->name('cart.details');
 
 
 Route::get('/order-tracking/{id}', [CheckoutController::class, 'orderTracking'])->name('order.tracking');

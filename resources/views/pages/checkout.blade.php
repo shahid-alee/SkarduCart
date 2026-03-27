@@ -1,183 +1,212 @@
 @extends('layouts.main')
 
-@push('title')
-<title>Checkout</title>
-@endpush
-
 @section('content')
-
 <div class="container-fluid bg-light p-5">
     <h1 class="text-center">
-        <i class="fa-solid fa-credit-card"></i> Checkout
+        <i class="fas fa-credit-card"></i> Checkout
     </h1>
 </div>
 
-<section>
-    <div class="container my-5">
-
-        <form action="{{ route('stripe.checkout') }}" method="POST">
-            @csrf
-
-            <div class="row">
-
-                <!-- Billing Details -->
-                <div class="col-lg-7">
-
-                    <h4 class="mb-4">Billing Details</h4>
-
-                    <div class="row">
-
-                        <div class="col-md-6 mb-3">
-                            <label>First Name</label>
-                            <input type="text" name="first_name" class="form-control" required>
+<div class="container my-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Shipping Information</h5>
+                    
+                    <form action="{{ route('stripe.checkout') }}" method="POST" id="checkout-form">
+                        @csrf
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="first_name" class="form-label">First Name</label>
+                                <input type="text" class="form-control @error('first_name') is-invalid @enderror" 
+                                       id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+                                @error('first_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="last_name" class="form-label">Last Name</label>
+                                <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
+                                       id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+                                @error('last_name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label>Last Name</label>
-                            <input type="text" name="last_name" class="form-control" required>
+                        
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                   id="email" name="email" value="{{ old('email') }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        <div class="col-md-12 mb-3">
-                            <label>Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                class="form-control"
-                                value="{{ auth()->check() ? auth()->user()->email : '' }}"
-                                readonly>
+                        
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control @error('phone') is-invalid @enderror" 
+                                   id="phone" name="phone" value="{{ old('phone') }}" required>
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        <div class="col-md-12 mb-3">
-                            <label>Phone</label>
-                            <input type="text" name="phone" class="form-control" required>
+                        
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea class="form-control @error('address') is-invalid @enderror" 
+                                      id="address" name="address" rows="3" required>{{ old('address') }}</textarea>
+                            @error('address')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
                         </div>
-
-                        <div class="col-md-12 mb-3">
-                            <label>Address</label>
-                            <input type="text" name="address" class="form-control" required>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="city" class="form-label">City</label>
+                                <input type="text" class="form-control @error('city') is-invalid @enderror" 
+                                       id="city" name="city" value="{{ old('city') }}" required>
+                                @error('city')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label for="postal_code" class="form-label">Postal Code</label>
+                                <input type="text" class="form-control @error('postal_code') is-invalid @enderror" 
+                                       id="postal_code" name="postal_code" value="{{ old('postal_code') }}">
+                                @error('postal_code')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label>City</label>
-                            <input type="text" name="city" class="form-control" required>
+                        
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Order Notes (Optional)</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="2" placeholder="Special instructions for delivery"></textarea>
                         </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label>Postal Code</label>
-                            <input type="text" name="postal_code" class="form-control">
-                        </div>
-
-                        <div class="col-md-12 mb-3">
-                            <label>Order Notes</label>
-                            <textarea name="notes" class="form-control" rows="4"></textarea>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <!-- Order Summary -->
-                <div class="col-lg-5">
-
-                    <div class="card p-4">
-
-                        <h4 class="mb-4">Your Order</h4>
-
-                        @php
-                        $cart = session('cart');
-                        $total = 0;
-                        @endphp
-
-                        <table class="table">
-
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-
-                                @foreach($cart as $id => $details)
-
-                                @php
-                                $subtotal = $details['price'] * $details['quantity'];
-                                $total += $subtotal;
-                                @endphp
-
-                                <tr>
-                                    <td>
-                                        {{ $details['product_name'] }}
-                                        <strong> × {{ $details['quantity'] }}</strong>
-                                    </td>
-
-                                    <td>
-                                        Rs {{ $subtotal }}
-                                    </td>
-                                </tr>
-
-                                @endforeach
-
-                            </tbody>
-
-                        </table>
-
-                        <hr>
-
-                        <div class="d-flex">
-                            <strong>Subtotal</strong>
-                            <strong class="ms-auto">Rs {{ $total }}</strong>
-                        </div>
-
-                        <div class="d-flex mt-2">
-                            <strong>Delivery</strong>
-                            <strong class="ms-auto">Rs 0</strong>
-                        </div>
-
-                        <hr>
-
-                        <div class="d-flex">
-                            <h5>Total</h5>
-                            <h5 class="ms-auto">Rs {{ $total }}</h5>
-                        </div>
-
-
-                        <!-- Payment Method -->
-
-                        <div class="mt-4">
-
-                            <h5>Payment Method</h5>
-
+                        
+                        <h5 class="mt-4 mb-3">Payment Method</h5>
+                        
+                        <div class="mb-3">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment" id="cash_on_delivery" value="cod" checked>
+                                <label class="form-check-label" for="cash_on_delivery">
+                                    <i class="fas fa-money-bill-wave"></i> Cash on Delivery
+                                </label>
+                            </div>
+                            
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment" value="card" checked>
-                                <label class="form-check-label">
-                                    <h5> Credit / Debit Card</h5>
+                                <input class="form-check-input" type="radio" name="payment" id="card_payment" value="card">
+                                <label class="form-check-label" for="card_payment">
+                                    <i class="fab fa-cc-stripe"></i> Credit / Debit Card (Stripe)
                                 </label>
                             </div>
-
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="radio" name="payment" value="cod">
-                                <label class="form-check-label">
-                                    <h5> Cash On Delivery</h5>
-                                </label>
-                            </div>
-
                         </div>
-
-                        <button class="btn theme-orange-btn text-light w-100 mt-4 rounded-pill">
-                            proceed to pay
-                        </button>
-
-                    </div>
-
+                        
+                        <div id="card-details" style="display: none;" class="mt-3">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> You will be redirected to Stripe secure payment page after placing order.
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn theme-green-btn text-light btn-lg" id="place-order-btn">
+                                <i class="fas fa-check-circle"></i> Place Order
+                            </button>
+                        </div>
+                    </form>
                 </div>
-
             </div>
-
-        </form>
-
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Order Summary</h5>
+                    <hr>
+                    
+                    @foreach($cart as $item)
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ $item['product_name'] }} x {{ $item['quantity'] }}</span>
+                        <span>Rs {{ number_format($item['price'] * $item['quantity'], 2) }}</span>
+                    </div>
+                    @endforeach
+                    
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>Rs {{ number_format($subtotal, 2) }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Delivery:</span>
+                        <span>Rs {{ number_format($delivery, 2) }}</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total:</strong>
+                        <strong class="text-success">Rs {{ number_format($total, 2) }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
+</div>
 
+<script>
+    // Show/hide card details based on payment method selection
+    document.querySelectorAll('input[name="payment"]').forEach((elem) => {
+        elem.addEventListener('change', function() {
+            const cardDetails = document.getElementById('card-details');
+            if (this.value === 'card') {
+                cardDetails.style.display = 'block';
+            } else {
+                cardDetails.style.display = 'none';
+            }
+        });
+    });
+    
+    // Form submission
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        
+        // Disable button to prevent double submission
+        placeOrderBtn.disabled = true;
+        placeOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+        
+        // If COD, submit normally
+        if (paymentMethod === 'cod') {
+            return true;
+        }
+        
+        // For card payment, the form will be submitted to Stripe
+        return true;
+    });
+</script>
+
+<style>
+    .form-check-input:checked {
+        background-color: #ff6600;
+        border-color: #ff6600;
+    }
+    
+    .theme-green-btn {
+        background-color: #28a745;
+        transition: all 0.3s ease;
+    }
+    
+    .theme-green-btn:hover {
+        background-color: #218838;
+        transform: translateY(-2px);
+    }
+    
+    .theme-green-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+</style>
 @endsection

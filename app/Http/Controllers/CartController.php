@@ -8,58 +8,97 @@ use App\Models\ProductVariant;
 
 class CartController extends Controller
 {
-    /**
-     * Add product to cart
-     */
-    public function add(Request $request, $productId)
-    {
-        $product = Product::findOrFail($productId);
-        $variantId = $request->variant_id;
-        $quantity = $request->quantity ?? 1;
-        
-        $cart = session()->get('cart', []);
-        
-        $price = $product->base_price;
-        $variantName = '';
-        $stockQuantity = $product->quantity;
-        
-        // If variant is selected, get variant details
+    
+   public function addCombined(Request $request)
+{
+    $productId = $request->product_id;
+    $selectedVariants = $request->variants;
+    $quantity = $request->quantity ?? 1;
+    
+    $product = Product::findOrFail($productId);
+    
+    // Calculate total price and get variant details
+    $totalPrice = $product->base_price;
+    $variantNames = [];
+    $variantIds = [];
+    $variantDetails = [];
+    $minStock = PHP_INT_MAX;
+    
+    foreach ($selectedVariants as $type => $variantId) {
         if ($variantId) {
             $variant = ProductVariant::findOrFail($variantId);
-            $price = $product->base_price + $variant->price_adjustment;
-            $variantName = ' (' . $variant->variant_name . ')';
-            $stockQuantity = $variant->stock_quantity;
-        }
-        
-        // Check stock
-        if ($quantity > $stockQuantity) {
-            return back()->with('error', 'Not enough stock available. Only ' . $stockQuantity . ' items left.');
-        }
-        
-        // Create a unique key for cart item
-        $cartKey = $variantId ? $productId . '_' . $variantId : (string)$productId;
-        
-        // If item already in cart, update quantity
-        if (isset($cart[$cartKey])) {
-            $newQuantity = $cart[$cartKey]['quantity'] + $quantity;
-            if ($newQuantity > $stockQuantity) {
-                return back()->with('error', 'Cannot add more than available stock. You already have ' . $cart[$cartKey]['quantity'] . ' in cart.');
-            }
-            $cart[$cartKey]['quantity'] = $newQuantity;
-        } else {
-            // Add new item to cart
-            $cart[$cartKey] = [
-                'product_id' => $productId,
-                'variant_id' => $variantId,
-                'product_name' => $product->product_name . $variantName,
-                'price' => $price,
-                'quantity' => $quantity,
+            $totalPrice += $variant->price_adjustment;
+            $variantNames[] = $variant->variant_name;
+            $variantIds[] = $variantId;
+            $variantDetails[$type] = [
+                'id' => $variantId,
+                'name' => $variant->variant_name,
+                'type' => $type,
+                'price_adjustment' => $variant->price_adjustment
             ];
+            
+            // Track minimum stock
+            if ($variant->stock_quantity < $minStock) {
+                $minStock = $variant->stock_quantity;
+            }
+        }
+    }
+    
+    // Sort variant IDs to create a consistent key
+    sort($variantIds);
+    $variantKey = implode('_', $variantIds);
+    
+    // Check stock
+    if ($quantity > $minStock) {
+        return back()->with('error', 'Not enough stock available. Only ' . $minStock . ' items left.');
+    }
+    
+    $cart = session()->get('cart', []);
+    
+    // Create a unique key for cart item
+    $cartKey = $productId . '_' . $variantKey;
+    
+    $productName = $product->product_name;
+    if (!empty($variantNames)) {
+        $productName .= ' (' . implode(' + ', $variantNames) . ')';
+    }
+    
+    // If item already in cart, update quantity
+    if (isset($cart[$cartKey])) {
+        $newQuantity = $cart[$cartKey]['quantity'] + $quantity;
+        if ($newQuantity > $minStock) {
+            return back()->with('error', 'Cannot add more than available stock. You already have ' . $cart[$cartKey]['quantity'] . ' in cart.');
+        }
+        $cart[$cartKey]['quantity'] = $newQuantity;
+    } else {
+        // Add new item to cart
+        $cart[$cartKey] = [
+            'product_id' => $productId,
+            'variant_ids' => $variantIds, // Store as array of IDs
+            'variant_details' => $variantDetails,
+            'product_name' => $productName,
+            'price' => $totalPrice,
+            'quantity' => $quantity,
+        ];
+    }
+    
+    session()->put('cart', $cart);
+    
+    return redirect()->route('cart.list')->with('success', 'Product added to cart successfully!');
+}
+
+    /**
+     * Buy now - Add to cart and redirect to checkout
+     */
+    public function buyNow(Request $request)
+    {
+        $response = $this->addCombined($request);
+        
+        if (session()->has('error')) {
+            return $response;
         }
         
-        session()->put('cart', $cart);
-        
-        return redirect()->route('cart.list')->with('success', 'Product added to cart successfully!');
+        return redirect()->route('checkout');
     }
 
     /**
@@ -90,21 +129,22 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             $quantity = $request->quantity;
             
-            // Get product and variant to check stock
+            // Get product and variants to check stock
             $productId = $cart[$id]['product_id'];
-            $variantId = $cart[$id]['variant_id'];
+            $variantIds = $cart[$id]['variant_ids'];
             
-            $stockQuantity = 0;
-            if ($variantId) {
+            $minStock = PHP_INT_MAX;
+            foreach ($variantIds as $variantId) {
                 $variant = ProductVariant::find($variantId);
-                if ($variant) {
-                    $stockQuantity = $variant->stock_quantity;
+                if ($variant && $variant->stock_quantity < $minStock) {
+                    $minStock = $variant->stock_quantity;
                 }
-            } else {
+            }
+            
+            // If no variants, check product stock
+            if ($minStock === PHP_INT_MAX) {
                 $product = Product::find($productId);
-                if ($product) {
-                    $stockQuantity = $product->quantity;
-                }
+                $minStock = $product ? $product->quantity : 0;
             }
             
             // Check if quantity is valid
@@ -114,8 +154,8 @@ class CartController extends Controller
                 return redirect()->route('cart.list')->with('success', 'Item removed from cart.');
             }
             
-            if ($quantity > $stockQuantity) {
-                return redirect()->route('cart.list')->with('error', 'Only ' . $stockQuantity . ' items available in stock.');
+            if ($quantity > $minStock) {
+                return redirect()->route('cart.list')->with('error', 'Only ' . $minStock . ' items available in stock.');
             }
             
             $cart[$id]['quantity'] = $quantity;

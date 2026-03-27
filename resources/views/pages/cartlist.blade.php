@@ -27,7 +27,7 @@
             <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
             <h3>Your cart is empty</h3>
             <p class="text-muted">Looks like you haven't added any items to your cart yet.</p>
-            <a href="{{ route('home') }}" class="btn theme-green-btn text-light rounded-pill px-4">
+            <a href="{{ route('index') }}" class="btn theme-green-btn text-light rounded-pill px-4">
                 Continue Shopping
             </a>
         </div>
@@ -48,51 +48,51 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($cart as $key => $item)
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex align-items-center">
-                                                <div>
-                                                    <h6 class="mb-0">{{ $item['product_name'] }}</h6>
-                                                    @if($item['variant_id'])
-                                                        <small class="text-muted">Variant: {{ $item['variant_id'] }}</small>
-                                                    @endif
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>Rs {{ number_format($item['price'], 2) }}</td>
-                                        <td>
-                                            <form action="{{ route('cart.update', $key) }}" method="POST" class="d-flex">
-                                                @csrf
-                                                @method('PUT')
-                                                <input type="number" 
-                                                       name="quantity" 
-                                                       value="{{ $item['quantity'] }}" 
-                                                       min="1" 
-                                                       max="100"
-                                                       class="form-control" 
-                                                       style="width: 80px;">
-                                                <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
-                                            </form>
-                                        </td>
-                                        <td>Rs {{ number_format($item['price'] * $item['quantity'], 2) }}</td>
-                                        <td>
-                                            <form action="{{ route('cart.remove', $key) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
+                                   @foreach($cart as $key => $item)
+<tr>
+    <td>
+        <div>
+            <h6 class="mb-0">{{ $item['product_name'] }}</h6>
+            @if(isset($item['variant_details']))
+                @foreach($item['variant_details'] as $type => $variant)
+                    <small class="text-muted d-block">{{ ucfirst($type) }}: {{ $variant['name'] }}</small>
+                @endforeach
+            @endif
+        </div>
+    </td>
+    <td>Rs {{ number_format($item['price'], 2) }}</td>
+    <td>
+        <form action="{{ route('cart.update', $key) }}" method="POST" class="d-flex">
+            @csrf
+            @method('PUT')
+            <input type="number" 
+                   name="quantity" 
+                   value="{{ $item['quantity'] }}" 
+                   min="1" 
+                   max="100"
+                   class="form-control" 
+                   style="width: 80px;">
+            <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
+        </form>
+    </td>
+    <td>Rs {{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+    <td>
+        <form action="{{ route('cart.remove', $key) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="btn btn-sm btn-danger">
+                <i class="fas fa-trash"></i>
+            </button>
+        </form>
+    </td>
+</tr>
+@endforeach
                                 </tbody>
                             </table>
                         </div>
                         
                         <div class="d-flex justify-content-between mt-3">
-                            <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('index') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left"></i> Continue Shopping
                             </a>
                             <form action="{{ route('cart.clear') }}" method="POST">
