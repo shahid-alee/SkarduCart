@@ -36,7 +36,7 @@
                                         <td>{{ $user->role}}</td>
                                         <td>
                                             <a href="{{ route('user.edit', $user->id) }}">
-                                                <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
+                                                <button type="button" class="btn btn-info btn-rounded btn-sm">EDIT</button>
                                             </a>
 
                                             <form action="{{ route('user.destroy', $user->id) }}"
@@ -45,7 +45,7 @@
                                                   onsubmit="return confirm('Are you sure you want to delete this user?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger btn-rounded btn-fw">
+                                                <button type="submit" class="btn btn-danger btn-rounded btn-sm">
                                                     Delete
                                                 </button>
                                             </form>

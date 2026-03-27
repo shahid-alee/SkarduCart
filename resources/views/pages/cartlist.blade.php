@@ -1,164 +1,137 @@
 @extends('layouts.main')
 
-@push('title')
-<title>Cart List</title>
-@endpush
-
 @section('content')
-
 <div class="container-fluid bg-light p-5">
     <h1 class="text-center">
-        <i class="fa-solid fa-cart-arrow-down"></i>Cart List
+        <i class="fas fa-shopping-cart"></i> Shopping Cart
     </h1>
 </div>
 
-<section>
-    <div class="container">
-        <div class="row my-5">
-            <div class="col-lg-12">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Sub total</th>
-                            <th scope="col">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php $total = 0; @endphp
-                        @foreach($cart as $id => $details)
-                        @php $subtotal = $details['price'] * $details['quantity']; @endphp
-                        @php $total += $subtotal; @endphp
-                        <tr>
-                            <td>
-                                <div class="d-flex">
-                                    <div>
-                                        <img src="{{ asset('storage/' . $details['image'][0]) }}" style="width:100px">
-                                    </div>
-                                    <div>
-                                        <h5 class="p-3">{{ $details['product_name'] }}</h5>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>Rs {{ $details['price'] }}</td>
-                            <td>
-
-                                <form action="{{ route('cart.update',$id) }}" method="POST" class="d-flex align-items-center">
-                                    @csrf
-
-                                    <button type="button" class="btn btn-secondary rounded-start-pill btn-sm" onclick="decreaseCartQty({{ $id }})">-</button>
-
-                                    <input type="number" name="quantity" id="qty{{ $id }}" value="{{ $details['quantity'] }}" min="1"
-                                        class="form-control mx-2 text-center"
-                                        style="width:70px">
-
-                                    <button type="button" class="btn btn-secondary rounded-end-pill btn-sm" onclick="increaseCartQty({{ $id }})">+</button>
-
-                                    <button type="submit" class="btn btn-success rounded-pill btn-sm ms-2">
-                                        Update
-                                    </button>
-
-                                </form>
-
-                            </td>
-                            <td>Rs {{ $subtotal }}</td>
-                            <td>
-                                <a href="{{ route('cart.remove',$id) }}" class="btn btn-danger rounded-pill">
-                                    remove
-                                </a>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+<div class="container my-5">
+    @if(session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    @endif
+    
+    @if(empty($cart))
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
+            <h3>Your cart is empty</h3>
+            <p class="text-muted">Looks like you haven't added any items to your cart yet.</p>
+            <a href="{{ route('home') }}" class="btn theme-green-btn text-light rounded-pill px-4">
+                Continue Shopping
+            </a>
+        </div>
+    @else
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Subtotal</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($cart as $key => $item)
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div>
+                                                    <h6 class="mb-0">{{ $item['product_name'] }}</h6>
+                                                    @if($item['variant_id'])
+                                                        <small class="text-muted">Variant: {{ $item['variant_id'] }}</small>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>Rs {{ number_format($item['price'], 2) }}</td>
+                                        <td>
+                                            <form action="{{ route('cart.update', $key) }}" method="POST" class="d-flex">
+                                                @csrf
+                                                @method('PUT')
+                                                <input type="number" 
+                                                       name="quantity" 
+                                                       value="{{ $item['quantity'] }}" 
+                                                       min="1" 
+                                                       max="100"
+                                                       class="form-control" 
+                                                       style="width: 80px;">
+                                                <button type="submit" class="btn btn-sm btn-primary ms-2">Update</button>
+                                            </form>
+                                        </td>
+                                        <td>Rs {{ number_format($item['price'] * $item['quantity'], 2) }}</td>
+                                        <td>
+                                            <form action="{{ route('cart.remove', $key) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left"></i> Continue Shopping
+                            </a>
+                            <form action="{{ route('cart.clear') }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger">
+                                    <i class="fas fa-trash-alt"></i> Clear Cart
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-lg-5 ms-auto my-5">
-                @php
-                $discount = 0;
-                $delivery = 0;
-                $grandTotal = $total - $discount + $delivery;
-                @endphp
-
-                <div>
-                    <h3>Price Details</h3>
-                </div>
-
-                <hr>
-
-                <div class="d-flex">
-                    <div>
-                        <h5>Sub Total</h5>
-                    </div>
-                    <div class="ms-auto">
-                        <h5>Rs {{ $total }}</h5>
-                    </div>
-                </div>
-
-                <div class="d-flex">
-                    <div>
-                        <h5>Discount</h5>
-                    </div>
-                    <div class="ms-auto">
-                        <h5>Rs {{ $discount}}</h5>
+            
+            <div class="col-lg-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">Cart Summary</h5>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>Rs {{ number_format($subtotal, 2) }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Delivery:</span>
+                            <span>Rs {{ number_format($delivery, 2) }}</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-success">Rs {{ number_format($total, 2) }}</strong>
+                        </div>
+                        <a href="{{ route('checkout') }}" class="btn theme-green-btn text-light w-100">
+                            Proceed to Checkout
+                        </a>
                     </div>
                 </div>
-
-                <div class="d-flex">
-                    <div>
-                        <h5>Delivery Charge</h5>
-                    </div>
-                    <div class="ms-auto">
-                        <h5>Rs {{ $delivery }}</h5>
-                    </div>
-                </div>
-
-                <hr>
-
-                <div class="d-flex">
-                    <div>
-                        <h5>Total</h5>
-                    </div>
-                    <div class="ms-auto">
-                        <h5>Rs {{ $grandTotal }}</h5>
-                    </div>
-                </div>
-
-                <div class="mt-4">
-                    @auth
-                    <a href="{{ route('checkout') }}" class="btn theme-orange-btn text-light rounded-pill w-100">
-                        Proceed to Checkout <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                    @endauth
-
-                    @guest
-                    <a href="{{ route('login.form') }}" class="btn theme-orange-btn text-light rounded-pill w-100">
-                        Login to Checkout <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                    @endguest
-                </div>
-
             </div>
         </div>
-</section>
-
-<script>
-    function increaseCartQty(id) {
-
-        let qty = document.getElementById('qty' + id);
-        qty.value = parseInt(qty.value) + 1;
-
-    }
-
-    function decreaseCartQty(id) {
-
-        let qty = document.getElementById('qty' + id);
-
-        if (qty.value > 1) {
-            qty.value = parseInt(qty.value) - 1;
-        }
-
-    }
-</script>
+    @endif
+</div>
 @endsection

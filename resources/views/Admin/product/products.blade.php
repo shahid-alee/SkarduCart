@@ -48,12 +48,12 @@
 
                                         <td>
                                             <a href="{{ route('product.view', $product->id) }}">
-                                                <button type="button" class="btn btn-secondary btn-rounded btn-fw">VIEW</button>
+                                                <button type="button" class="btn btn-secondary btn-rounded  btn-sm">VIEW</button>
                                             </a>
 
 
                                             <a href="{{ route('product.edit', $product->id) }}">
-                                                <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
+                                                <button type="button" class="btn btn-info btn-rounded btn-sm">EDIT</button>
                                             </a>
 
 
@@ -65,7 +65,7 @@
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="submit" class="btn btn-danger btn-rounded btn-fw">
+                                                <button type="submit" class="btn btn-danger btn-rounded btn-sm">
                                                     Delete
                                                 </button>
                                             </form>

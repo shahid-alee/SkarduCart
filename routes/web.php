@@ -70,8 +70,8 @@ Route::get('/order-tracking/{id}', [CheckoutController::class, 'orderTracking'])
 // // Route::post('/stripe/webhook', [CheckoutController::class, 'handleWebhook']);
 // Route::post('/stripe/webhook', [CheckoutController::class, 'stripeWebhook']);
 
-Route::post('/stripe/webhook', [CheckoutController::class, 'stripeWebhook'])
-    ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/stripe/webhook', [CheckoutController::class, 'stripeWebhook'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+
 Route::get('/stripe/success/{orderId}', [CheckoutController::class, 'stripePaymentSuccess'])->name('stripe.success');
 
 

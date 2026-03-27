@@ -34,7 +34,7 @@
                                         <td>{{ $category->description }}</td>
                                         <td>
                                             <a href="{{ route('category.edit', $category->id) }}">
-                                                <button type="button" class="btn btn-info btn-rounded btn-fw">EDIT</button>
+                                                <button type="button" class="btn btn-info btn-rounded btn-sm">EDIT</button>
                                             </a>
 
                                             <form action="{{ route('category.destroy', $category->id) }}"
@@ -45,7 +45,7 @@
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="submit" class="btn btn-danger btn-rounded btn-fw">
+                                                <button type="submit" class="btn btn-danger btn-rounded btn-sm">
                                                     Delete
                                                 </button>
                                             </form>
