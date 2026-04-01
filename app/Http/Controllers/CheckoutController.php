@@ -156,7 +156,6 @@ class CheckoutController extends Controller
 
     public function stripeWebhook(Request $request)
     {
-        // Log the request for debugging
         Log::info('Webhook received', [
             'method' => $request->method(),
             'path' => $request->path(),
@@ -168,7 +167,6 @@ class CheckoutController extends Controller
         $sig_header = $request->header('Stripe-Signature');
         $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
         
-        // Log for debugging
         Log::info('Webhook details', [
             'payload_length' => strlen($payload),
             'has_signature' => !empty($sig_header),
@@ -200,7 +198,6 @@ class CheckoutController extends Controller
             return response()->json(['error' => 'Webhook error'], 400);
         }
         
-        // Handle the event
         if ($event->type === 'payment_intent.succeeded') {
             $paymentIntent = $event->data->object;
             
@@ -223,9 +220,8 @@ class CheckoutController extends Controller
                 return response()->json(['error' => 'Order not found'], 200);
             }
             
-            // Update the order
             $order->payment_status = 'paid';
-            $order->order_status = 'processing';
+            $order->order_status = 'pending';
             $order->transaction_id = $paymentIntent->id;
             $order->save();
             

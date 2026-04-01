@@ -92,7 +92,7 @@
                         </div>
                         
                         <div class="d-flex justify-content-between mt-3">
-                            <a href="{{ route('index') }}" class="btn btn-outline-secondary">
+                            <a href="{{ route('home') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left"></i> Continue Shopping
                             </a>
                             <form action="{{ route('cart.clear') }}" method="POST">

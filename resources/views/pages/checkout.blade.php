@@ -40,7 +40,7 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">Email Address</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                                   id="email" name="email" value="{{ old('email') }}" required>
+                                   id="email" name="email" value="{{ Auth::user()->email }}" required>
                             @error('email')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -102,14 +102,14 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="payment" id="card_payment" value="card">
                                 <label class="form-check-label" for="card_payment">
-                                    <i class="fab fa-cc-stripe"></i> Credit / Debit Card (Stripe)
+                                    <i class="fab fa-cc-stripe"></i> Credit / Debit Card 
                                 </label>
                             </div>
                         </div>
                         
                         <div id="card-details" style="display: none;" class="mt-3">
                             <div class="alert alert-info">
-                                <i class="fas fa-info-circle"></i> You will be redirected to Stripe secure payment page after placing order.
+                                <i class="fas fa-info-circle"></i> You will be redirected to secure payment page after placing order.
                             </div>
                         </div>
                         

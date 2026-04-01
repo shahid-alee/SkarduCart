@@ -30,12 +30,21 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div>
-                <form class="d-flex">
-                    <div class="input-group">
-                        <input class="form-control form-control-sm " style="width: 350px;" type="search" placeholder="Search Products" aria-label="Search">
-                        <button class="btn btn-light btn-sm text-secondary" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                    </div>
-                </form>
+                <form class="d-flex" action="{{ route('product.search') }}" method="GET">
+    <div class="input-group">
+        <input 
+            class="form-control form-control-sm"
+            style="width: 350px;"
+            type="search"
+            name="query"
+            value="{{ request('query') }}"
+            placeholder="Search Products..."
+        >
+        <button class="btn btn-light btn-sm text-secondary" type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+    </div>
+</form>
             </div>
             <div>
                 <a href="#" class="text-decoration-none mx-1 text-light ">Become a seller</a>

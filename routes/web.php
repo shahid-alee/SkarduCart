@@ -47,7 +47,22 @@ Route::middleware('auth')->group(function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/', [HomeController::class, 'index'])->name('index');
+// Route::get('/', [HomeController::class, 'index'])->name('index');
+
+
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+
+
+Route::get('/products/top-deals', [ProductController::class, 'topDeals'])->name('products.top-deals');
+Route::get('/products/category/{category}', [ProductController::class, 'category'])->name('products.category');
+Route::get('/products/popular', [ProductController::class, 'popular'])->name('products.popular');
+Route::get('/products/recently-viewed', [ProductController::class, 'recentlyViewed'])->name('products.recently-viewed');
+
+
+
+Route::get('/search', [ProductController::class, 'search'])->name('product.search');
 
 Route::get('/product/{id}', [ProductdetailController::class, 'detail'])->name('product.show');
 
