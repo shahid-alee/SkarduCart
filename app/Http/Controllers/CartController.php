@@ -87,9 +87,6 @@ class CartController extends Controller
     return redirect()->route('cart.list')->with('success', 'Product added to cart successfully!');
 }
 
-    /**
-     * Buy now - Add to cart and redirect to checkout
-     */
     public function buyNow(Request $request)
     {
         $response = $this->addCombined($request);
@@ -101,9 +98,7 @@ class CartController extends Controller
         return redirect()->route('checkout');
     }
 
-    /**
-     * Display cart list
-     */
+   
     public function cartList()
     {
         $cart = session()->get('cart', []);
@@ -119,9 +114,7 @@ class CartController extends Controller
         return view('pages.cartlist', compact('cart', 'subtotal', 'delivery', 'total'));
     }
 
-    /**
-     * Update cart item quantity
-     */
+   
     public function updateCart(Request $request, $id)
     {
         $cart = session()->get('cart');
@@ -129,7 +122,6 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             $quantity = $request->quantity;
             
-            // Get product and variants to check stock
             $productId = $cart[$id]['product_id'];
             $variantIds = $cart[$id]['variant_ids'];
             
@@ -141,13 +133,11 @@ class CartController extends Controller
                 }
             }
             
-            // If no variants, check product stock
             if ($minStock === PHP_INT_MAX) {
                 $product = Product::find($productId);
                 $minStock = $product ? $product->quantity : 0;
             }
             
-            // Check if quantity is valid
             if ($quantity <= 0) {
                 unset($cart[$id]);
                 session()->put('cart', $cart);
@@ -165,9 +155,7 @@ class CartController extends Controller
         return redirect()->route('cart.list')->with('success', 'Cart updated successfully!');
     }
 
-    /**
-     * Remove item from cart
-     */
+   
     public function removeFromCart($id)
     {
         $cart = session()->get('cart');
@@ -180,18 +168,14 @@ class CartController extends Controller
         return redirect()->route('cart.list')->with('success', 'Item removed from cart successfully!');
     }
 
-    /**
-     * Clear entire cart
-     */
+   
     public function clearCart()
     {
         session()->forget('cart');
         return redirect()->route('cart.list')->with('success', 'Cart cleared successfully!');
     }
 
-    /**
-     * Get cart count (for AJAX/header)
-     */
+
     public function cartCount()
     {
         $cart = session()->get('cart', []);
@@ -204,9 +188,7 @@ class CartController extends Controller
         return response()->json(['count' => $count]);
     }
 
-    /**
-     * Get cart details (for AJAX)
-     */
+
     public function cartDetails()
     {
         $cart = session()->get('cart', []);
