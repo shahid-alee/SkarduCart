@@ -14,6 +14,10 @@ class ProductVariant extends Model
         'stock_quantity'
     ];
 
+    protected $casts = [
+    'variant_id' => 'array',
+];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

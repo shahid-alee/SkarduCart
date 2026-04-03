@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use App\Rules\MatchOldPassword;
+use App\Models\Order;
 
 class ProfileController extends Controller
 {
@@ -66,4 +67,14 @@ class ProfileController extends Controller
 
         return back()->with('success', 'Password updated successfully.');
     }
+
+public function orderHistory()
+{
+    $orders = Order::with(['items', 'tracking'])
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
+
+    return view('profile.orderHistory', compact('orders'));
+}
 }

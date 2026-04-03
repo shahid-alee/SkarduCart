@@ -16,6 +16,7 @@ use App\Http\Controllers\StripeWebhookController;
 Use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\UserController;
 
 Route::get('/auth/login',[LoginController::class, 'loginForm'])->name('login.form');
@@ -32,17 +33,15 @@ Route::post('/admin/update-password', [ProfileController::class, 'adminchangePas
 
 
 
+
 Route::middleware('auth')->group(function () {
 
     Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
-
     Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile-update');
-
     Route::get('/change-password', [UserController::class, 'changePassword'])->name('user.changepassword.form');
-
     Route::post('/change-password/update', [UserController::class, 'updatePassword'])->name('user.password.update');
-
-    Route::get('/orders', [UserController::class, 'orders'])->name('user.orders');
+    Route::get('/user/orders', [UserController::class, 'orderHistory'])->name('user.orders');
+//     Route::get('/orders', [UserController::class, 'orders'])->name('user.orders');
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -162,8 +161,10 @@ Route::post('/admin/store/subcategory', [SubcategoryController::class, 'storesub
      Route::get('/subcategory/{id}/edit', [SubcategoryController::class, 'editsubcategory'])->name('subcategory.edit');
      Route::put('/subcategory/{id}', [SubcategoryController::class, 'updatesubcategory'])->name('subcategory.update');
      Route::delete('/subcategory/{id}', [SubcategoryController::class, 'destroy'])->name('subcategory.destroy');
-      
 
 
      
+Route::fallback(function () {
+    return view('error');
+});
 

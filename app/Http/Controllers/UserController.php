@@ -87,16 +87,7 @@ class UserController extends Controller
     }
 
 
-    public function orders()
-    {
-        $user = Auth::user();
-
-        $orders = Order::where('user_id', $user->id)
-            ->latest()
-            ->get();
-
-        return view('user.ordershistory', compact('orders'));
-    }
+    
 
 
     public function profile()
@@ -158,4 +149,14 @@ class UserController extends Controller
 
         return back()->with('success', 'Password updated successfully.');
     }
+
+public function orderHistory()
+{
+    $orders = Order::with(['items', 'tracking'])
+                ->where('user_id', Auth::id())
+                ->latest()
+                ->get();
+
+    return view('profile.orderHistory', compact('orders'));
+}
 }
