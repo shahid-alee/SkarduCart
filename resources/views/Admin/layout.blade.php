@@ -195,16 +195,8 @@
                                 Change password
                             </a>
 
-                            <!-- <a class="dropdown-item">
-                                <i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i>
-                                Order History
-                            </a> -->
-
-                            <!-- <a class="dropdown-item">
-                                <i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i>
-                                FAQ
-                            </a> -->
-
+                        
+                            
                             <form method="POST" action="{{route('logout')}}">
                                 @csrf
                                 <button type="submit" class="dropdown-item">
