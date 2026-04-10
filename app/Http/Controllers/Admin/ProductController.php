@@ -89,16 +89,13 @@ class ProductController extends Controller
             }
         }
 
-        // Calculate total quantity from variants
         $totalQuantity = 0;
         if ($request->has('variants')) {
             foreach ($request->variants as $variant) {
-                // Skip generation variants for non-laptop categories
                 if ($category && strtolower($category->category_name) != 'laptops' && $variant['type'] == 'generation') {
                     continue;
                 }
 
-                // Skip empty variant names
                 if (empty($variant['name'])) {
                     continue;
                 }
@@ -118,15 +115,12 @@ class ProductController extends Controller
             'image' => $imagePaths
         ]);
 
-        // Save variants - filter out empty ones and invalid ones
         if ($request->has('variants')) {
             foreach ($request->variants as $variant) {
-                // Skip if variant name is empty
                 if (empty($variant['name'])) {
                     continue;
                 }
 
-                // Skip generation variants for non-laptop categories
                 if ($category && strtolower($category->category_name) != 'laptops' && $variant['type'] == 'generation') {
                     continue;
                 }
@@ -141,10 +135,8 @@ class ProductController extends Controller
             }
         }
 
-        // Save properties only if they exist and have values
         if ($request->has('properties') && is_array($request->properties)) {
             foreach ($request->properties as $propertyName => $values) {
-                // Skip empty property names or empty values
                 if (empty($propertyName) || empty($values)) {
                     continue;
                 }
@@ -188,7 +180,6 @@ class ProductController extends Controller
             'variants.*.stock' => 'nullable|integer'
         ]);
 
-        // Get category to check if generation variants should be saved
         $category = Category::find($request->category_id);
 
         // Calculate total quantity from variants

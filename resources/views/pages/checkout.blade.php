@@ -92,20 +92,22 @@
                         <h5 class="mt-4 mb-3">Payment Method</h5>
                         
                         <div class="mb-3">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="radio" name="payment" id="cash_on_delivery" value="cod" checked>
-                                <label class="form-check-label" for="cash_on_delivery">
-                                    <i class="fas fa-money-bill-wave"></i> Cash on Delivery
-                                </label>
-                            </div>
+                           
                             
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="payment" id="card_payment" value="card">
+                                <input class="form-check-input" type="radio" name="payment" id="card_payment" value="card"   checked>
                                 <label class="form-check-label" for="card_payment">
                                     <i class="fab fa-cc-stripe"></i> Credit / Debit Card 
                                 </label>
                             </div>
                         </div>
+
+                         <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="payment" id="cash_on_delivery" value="cod">
+                                <label class="form-check-label" for="cash_on_delivery">
+                                    <i class="fas fa-money-bill-wave"></i> Cash on Delivery
+                                </label>
+                            </div>
                         
                         <div id="card-details" style="display: none;" class="mt-3">
                             <div class="alert alert-info">
