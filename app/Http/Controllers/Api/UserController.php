@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -16,8 +16,8 @@ class UserController extends Controller
     public function index()
     {
 
-      $users = User::paginate(10); 
-    return response()->json($users);
+        $users = User::paginate(10);
+        return response()->json($users);
     }
 
     public function store(Request $request)
@@ -40,51 +40,51 @@ class UserController extends Controller
     }
 
 
-   public function show($id)
-{
-    $user = User::find($id);
+    public function show($id)
+    {
+        $user = User::find($id);
 
-    if (!$user) {
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json($user);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'role' => 'required|in:user,admin',
+            'password' => 'nullable|min:6', // optional
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->role = $request->role;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
         return response()->json([
-            'message' => 'User not found'
-        ], 404);
+            'message' => 'User updated successfully',
+            'user' => $user
+        ]);
     }
-
-    return response()->json($user);
-}
-
-public function update(Request $request, $id)
-{
-    $user = User::find($id);
-
-    if (!$user) {
-        return response()->json([
-            'message' => 'User not found'
-        ], 404);
-    }
-
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $id,
-        'role' => 'required|in:user,admin',
-        'password' => 'nullable|min:6', // optional
-    ]);
-
-    $user->name = $request->name;
-    $user->email = $request->email;
-    $user->role = $request->role;
-
-    if ($request->filled('password')) {
-        $user->password = Hash::make($request->password);
-    }
-
-    $user->save();
-
-    return response()->json([
-        'message' => 'User updated successfully',
-        'user' => $user
-    ]);
-}
 
 
     public function destroy($id)
@@ -119,6 +119,7 @@ public function update(Request $request, $id)
         }
 
         $user->name = $request->name;
+        $user->email = $request->email;
         $user->save();
 
         return response()->json([
@@ -149,13 +150,13 @@ public function update(Request $request, $id)
         ]);
     }
 
-    public function orderHistory()
-    {
-        $orders = Order::with(['items', 'tracking'])
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->get();
+    // public function orderHistory()
+    // {
+    //     $orders = Order::with(['items', 'tracking'])
+    //         ->where('user_id', Auth::id())
+    //         ->latest()
+    //         ->get();
 
-        return response()->json($orders);
-    }
+    //     return response()->json($orders);
+    // }
 }

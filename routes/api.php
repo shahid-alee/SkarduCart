@@ -30,11 +30,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
 
-    // Profile
-    // Route::get('/profile', [UserController::class, 'profile']);
-    // Route::post('/profile/update', [UserController::class, 'updateProfile']);
-    // Route::post('/change-password', [UserController::class, 'updatePassword']);
-    // Route::get('/orders', [UserController::class, 'orderHistory']);
+   // Profile
+    Route::get('/profile', [UserController::class, 'profile']);
+    Route::post('/profile/update', [UserController::class, 'updateProfile']);
+    Route::post('/change-password', [UserController::class, 'updatePassword']);
+    Route::get('/orders', [UserController::class, 'orderHistory']);
 
     // Products
     // Route::get('/products', [ProductController::class, 'index']);
