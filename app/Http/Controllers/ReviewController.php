@@ -29,7 +29,7 @@ class ReviewController extends Controller
     }
 
     return redirect()
-        ->route('index')
+        ->route('home')
         ->with('success', 'All reviews submitted successfully');
 }
 

@@ -58,19 +58,5 @@ class OrderController extends Controller
             ->with('success', 'Order status updated successfully');
     }
 
-    // public function updateStatus(Request $request, $id)
-    // {
-    //     $order = Order::findOrFail($id);
-
-    //     $order->order_status = $request->status;
-    //     $order->save();
-
-    //     OrderTracking::create([
-    //         'order_id' => $order->id,
-    //         'status' => $request->status,
-    //         'message' => 'Order updated to ' . $request->status
-    //     ]);
-
-    //     return back()->with('success', 'Order status updated');
-    // }
+   
 }

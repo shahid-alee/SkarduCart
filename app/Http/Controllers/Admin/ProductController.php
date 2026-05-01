@@ -14,37 +14,11 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Storage;
 
 
-
 class ProductController extends Controller
 {
 
 
-    public function destroy($id)
-    {
-        $product = Product::findOrFail($id);
-        if ($product->image) {
-
-            foreach ($product->image as $img) {
-                Storage::disk('public')->delete($img);
-            }
-        }
-        $product->properties()->delete();
-        $product->delete();
-
-        return redirect()
-            ->route('admin.product.products')
-            ->with('success', 'Product deleted successfully');
-    }
-
-
-    public function viewproduct($id)
-    {
-        $product = Product::findOrFail($id);
-        $categories = Category::all();
-        $subcategories = Subcategories::all();
-
-        return view('admin.product.viewproduct', compact('product', 'categories', 'subcategories'));
-    }
+    
 
 
 
@@ -276,6 +250,33 @@ class ProductController extends Controller
         ];
 
         return view('admin.product.addproduct', compact('product', 'categories', 'subcategories', 'variantsByType'));
+    }
+
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        if ($product->image) {
+
+            foreach ($product->image as $img) {
+                Storage::disk('public')->delete($img);
+            }
+        }
+        $product->properties()->delete();
+        $product->delete();
+
+        return redirect()
+            ->route('admin.product.products')
+            ->with('success', 'Product deleted successfully');
+    }
+
+
+    public function viewproduct($id)
+    {
+        $product = Product::findOrFail($id);
+        $categories = Category::all();
+        $subcategories = Subcategories::all();
+
+        return view('admin.product.viewproduct', compact('product', 'categories', 'subcategories'));
     }
 
     // public function search(Request $request)

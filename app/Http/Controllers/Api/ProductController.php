@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -12,10 +13,33 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-  public function index()
+
+public function index()
+{
+    $products = \App\Models\Product::with(['category', 'subcategory'])->get();
+
+    return response()->json([
+        'data' => $products
+    ]);
+}
+
+
+    public function destroy($id)
     {
-        $products = Product::with(['category', 'subcategory', 'variants'])->paginate(10);
-        return response()->json($products);
+        try {
+            $product = Product::findOrFail($id);
+            $product->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Product deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(Request $request)
@@ -24,13 +48,10 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'base_price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'nullable|exists:subcategories,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
             'description' => 'required|string',
-
-            'image' => 'nullable|array',
-            'image.*' => 'image|mimes:jpg,jpeg,png|max:10048',
-
-            
+            'image' => 'required|array',
+            'image.*' => 'image|mimes:jpg,jpeg,png|max:10240',
             'variants' => 'array',
             'variants.*.type' => 'required|string',
             'variants.*.name' => 'required|string',
@@ -48,7 +69,7 @@ class ProductController extends Controller
             }
         }
 
-       
+
         $totalQuantity = 0;
 
         if ($request->has('variants')) {
@@ -69,7 +90,7 @@ class ProductController extends Controller
             'base_price' => $request->base_price,
             'price' => $request->base_price,
             'category_id' => $request->category_id,
-            'subcategory_id' => $request->subcategory_id,
+            'sub_category_id' => $request->subcategory_id,
             'quantity' => $totalQuantity,
             'description' => $request->description,
             'image' => $imagePaths,
@@ -123,7 +144,7 @@ class ProductController extends Controller
             'product_name' => 'required|string|max:255',
             'base_price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
+            'sub_category_id' => 'required|exists:sub_categories,id',
             'description' => 'required|string',
 
             'image' => 'nullable|array',
@@ -138,7 +159,7 @@ class ProductController extends Controller
 
         $category = Category::find($request->category_id);
 
-       
+
         $totalQuantity = 0;
 
         if ($request->has('variants')) {
@@ -154,18 +175,18 @@ class ProductController extends Controller
             }
         }
 
-        
+
         $product->update([
             'product_name' => $request->product_name,
             'base_price' => $request->base_price,
             'price' => $request->base_price,
             'category_id' => $request->category_id,
-            'subcategory_id' => $request->subcategory_id,
+            'sub_category_id' => $request->sub_category_id,
             'quantity' => $totalQuantity,
             'description' => $request->description,
         ]);
 
-       
+
         if ($request->hasFile('image')) {
 
             if ($product->image) {
@@ -215,28 +236,28 @@ class ProductController extends Controller
     }
 
     //  Delete Product
-    public function destroy($id)
-    {
-        $product = Product::find($id);
+    // public function destroy($id)
+    // {
+    //     $product = Product::find($id);
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
+    //     if (!$product) {
+    //         return response()->json(['message' => 'Product not found'], 404);
+    //     }
 
-        // delete images
-        if ($product->image) {
-            foreach ($product->image as $img) {
-                Storage::disk('public')->delete($img);
-            }
-        }
+    //     // delete images
+    //     if ($product->image) {
+    //         foreach ($product->image as $img) {
+    //             Storage::disk('public')->delete($img);
+    //         }
+    //     }
 
-        // delete variants
-        $product->variants()->delete();
+    //     // delete variants
+    //     $product->variants()->delete();
 
-        $product->delete();
+    //     $product->delete();
 
-        return response()->json([
-            'message' => 'Product deleted successfully!'
-        ]);
-    }
+    //     return response()->json([
+    //         'message' => 'Product deleted successfully!'
+    //     ]);
+    // }
 }

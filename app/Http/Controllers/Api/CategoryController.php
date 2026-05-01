@@ -30,6 +30,7 @@ class CategoryController extends Controller
             'category' => $category
         ], 201);
     }
+    
 
      public function show($id)
     {

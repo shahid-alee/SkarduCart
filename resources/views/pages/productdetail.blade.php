@@ -292,11 +292,58 @@
                                     </table>
                                 </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
+        <!-- Product Reviews Section -->
+<div class="mt-5">
+    <h4 class="mb-4">Customer Reviews</h4>
+
+    @if($product->reviews && $product->reviews->count() > 0)
+
+        @foreach($product->reviews as $review)
+        <div class="card mb-3 shadow-sm border-0">
+            <div class="card-body">
+
+                <!-- User + Rating -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>
+                        <strong>{{ $review->user->name ?? 'Anonymous' }}</strong>
+                        <div class="small text-muted">
+                            {{ $review->created_at->format('d M Y') }}
+                        </div>
+                    </div>
+
+                    <div>
+                        @for($i=1; $i<=5; $i++)
+                            @if($i <= $review->rating)
+                                <span class="fa fa-star text-warning"></span>
+                            @else
+                                <span class="fa fa-star text-secondary"></span>
+                            @endif
+                        @endfor
+                    </div>
+                </div>
+
+                <!-- Review Content -->
+                <p class="mb-0 text-muted">
+                    {{ $review->review }}
+                </p>
+
+            </div>
+        </div>
+        @endforeach
+
+    @else
+        <div class="alert alert-info">
+            No reviews yet. Be the first to review this product!
+        </div>
+    @endif
+</div>
     </div>
 </section>
 

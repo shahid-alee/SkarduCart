@@ -22,6 +22,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+
+    // dd($request->all());
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -41,60 +43,55 @@ class UserController extends Controller
 
 
     public function show($id)
-    {
-        $user = User::find($id);
+{
+    $user = User::find($id);
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
-        }
-
-        return response()->json($user);
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
     }
 
-    public function update(Request $request, $id)
-    {
-        $user = User::find($id);
+    return response()->json($user);
+}
 
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found'
-            ], 404);
-        }
+public function update(Request $request, $id)
+{
+    $user = User::find($id);
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'role' => 'required|in:user,admin',
-            'password' => 'nullable|min:6', // optional
-        ]);
-
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role = $request->role;
-
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return response()->json([
-            'message' => 'User updated successfully',
-            'user' => $user
-        ]);
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
     }
 
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'role' => 'required|in:user,admin',
+        'password' => 'nullable|min:6',
+    ]);
 
-    public function destroy($id)
-    {
-        User::findOrFail($id)->delete();
+    $user->name = $request->name;
+    $user->email = $request->email;
+    $user->role = $request->role;
 
-        return response()->json([
-            'message' => 'User deleted successfully'
-        ]);
+    if ($request->filled('password')) {
+        $user->password = Hash::make($request->password);
     }
+
+    $user->save();
+
+    return response()->json([
+        'message' => 'User updated successfully',
+        'user' => $user
+    ]);
+}
+
+public function destroy($id)
+{
+    User::findOrFail($id)->delete();
+
+    return response()->json([
+        'message' => 'User deleted successfully'
+    ]);
+}
 
     public function profile()
     {
