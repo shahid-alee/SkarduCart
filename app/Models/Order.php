@@ -22,15 +22,25 @@ class Order extends Model
         'total',
         'payment_method',
         'payment_status',
-        'order_status' 
+        'order_status'
     ];
 
-    public function items()
+    // public function items()
+    // {
+    //     return $this->hasMany(OrderItem::class);
+    // }
+    public function tracking()
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(OrderTracking::class)->latest();
     }
-public function tracking()
+    public function items()
 {
-    return $this->hasMany(OrderTracking::class)->latest();
+    return $this->hasMany(OrderItem::class);
+    // Or whatever your order items relationship is named
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class);
 }
 }

@@ -40,7 +40,7 @@ class OrderItem extends Model
         }
         return explode(',', $this->variant_id);
     }
-    
+
     // Get all variants for this order item
     public function variants()
     {
@@ -50,13 +50,13 @@ class OrderItem extends Model
         $variantIds = explode(',', $this->variant_id);
         return ProductVariant::whereIn('id', $variantIds)->get();
     }
-    
+
     // Get single variant (if only one)
     public function variant()
     {
         return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
-    
+
     // Get formatted variant names
     public function getVariantNamesAttribute()
     {

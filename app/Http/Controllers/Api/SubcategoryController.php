@@ -9,12 +9,26 @@ use Illuminate\Http\Request;
 
 class SubcategoryController extends Controller
 {
-    // Get all subcategories with parent category info
-    public function index()
+    
+        public function index()
     {
-        $subcategories = Subcategories::with('category')->get();
-        return response()->json($subcategories);
+        try {
+            $subcategories = Subcategories::with('category')->get();
+            
+            return response()->json($subcategories);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve subcategories',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
+
+
+        
+    
 
     // Store new subcategory
     public function subcategorystore(Request $request)

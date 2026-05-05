@@ -19,14 +19,15 @@ class Product extends Model
 
     protected $casts = [
         'image' => 'array',
-        'base_price' => 'decimal:2'
+        'base_price' => 'decimal:2',
+
     ];
 
-    public function variants()
-    {
-        return $this->hasMany(ProductVariant::class);
-    }
-   
+    // public function variants()
+    // {
+    //     return $this->hasMany(ProductVariant::class);
+    // }
+
 
     public function properties()
     {
@@ -40,7 +41,12 @@ class Product extends Model
 
     public function subcategory()
     {
-        return $this->belongsTo(Subcategories::class);
+        return $this->belongsTo(Subcategories::class, 'subcategory_id');
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 
     public function reviews()
